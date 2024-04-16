@@ -1,4 +1,5 @@
 const express = require("express");
+const d = require("./log.d");
 const app = express();
 const PORT = 3000;
 
@@ -18,7 +19,7 @@ app.get("/log-d.js", (req, res) => {
 });
 
 app.post("/log.d/receive", (req, res) => {
-    res.status(200)
-})
+    res.status(200).send("OK");
+});
 
 app.listen(PORT);
