@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Terenz: PNPM
+pnpm-lock.yaml
