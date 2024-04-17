@@ -1,18 +1,16 @@
 // Logged data. Send this to server.
 log = {
-    data: {
+    page: window.location.pathname,
+    timestamp: 0,
+    data: { // TODO: Make classes out of these two.
         keyboard: [],
         mouse: []
     }
 }
 
-// On page load.
-window.addEventListener("load", (page) => {
-    // fetch("/test");
-});
+const submitLog = (log) => {
+    log.timestamp = Date.now();
 
-// On leaving page / moving to different page.
-window.addEventListener("visibilitychange", (page) => {
     fetch("/log.d/receive", {
         method: "post",
         headers: { // Required headers. See Postman documentation "user to normal".
@@ -23,20 +21,21 @@ window.addEventListener("visibilitychange", (page) => {
         body: JSON.stringify(log),
         keepalive: true // Keep alive until after window close. See: https://stackoverflow.com/questions/63157089/sending-post-request-with-fetch-after-closing-the-browser-with-beforeunload
     });
+}
+
+// On page load.
+window.addEventListener("load", (page) => {
+    // fetch("/test");
+});
+
+// On leaving page / moving to different page.
+window.addEventListener("visibilitychange", (page) => {
+    submitLog(log);
 });
 
 // Before page close.
 window.addEventListener("beforeunload", (page) => {
-    fetch("/log.d/receive", {
-        method: "post",
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "*/*"
-        },
-        mode: 'cors',
-        body: JSON.stringify(log),
-        keepalive: true
-    });
+    submitLog(log);
 });
 
 // Keyboard logger.
