@@ -1,7 +1,8 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Log.d Documentation Page</title>
-        <link rel="stylesheet" type="text/css" href="https://yarnpkg.com/en/package/normalize.css">
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/normalize.css@8.0.1/normalize.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     </head>
@@ -26,6 +27,9 @@
                 </main>
             </section>
         </div>
-        <script src="/log-d.js"></script>
+        <script src="/log-d.js">
+            // Returns error: Uncaught (in promise) TypeError: NetworkError when attempting to fetch resource.
+            // Probable fix: Deploy this with that CDN thing. I think that should work.
+        </script>
     </body>
 </html>
