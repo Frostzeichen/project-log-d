@@ -25,3 +25,4 @@ dist-ssr
 
 # Terenz: PNPM
 pnpm-lock.yaml
+.env
