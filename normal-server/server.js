@@ -4,7 +4,7 @@ const app = express();
 const PORT = 3000;
 
 app.set("view engine", "ejs");
-app.set("views", __dirname + "/views")
+app.set("views", __dirname + "/views");
 app.use(express.json()); // Works without bodyparser.
 
 app.get("/", (req, res) => {
