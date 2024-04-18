@@ -1,5 +1,5 @@
 const express = require("express");
-const d = require("./log.d");
+const d = require("./logd/log.server.js");
 const mysql = require("mysql2");
 
 require("dotenv").config();
@@ -20,6 +20,10 @@ app.use(express.json());
  
 app.get("/", (req, res) => {
    res.render("admin/index.ejs");
+});
+
+app.get("/log-d.js", (req, res) => {
+    res.sendFile(__dirname + "/logd/log.client.js");
 });
 
 app.post("/log.d/receive", (req, res) => {
