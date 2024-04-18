@@ -36,4 +36,10 @@ app.post("/log.d/receive", (req, res) => {
     res.status(200).send("OK");
 });
 
-app.listen(process.env.SV_PORT);
+const server = app.listen(process.env.SV_PORT);
+
+const io = require("socket.io")(server);
+
+io.on("connection", (socket) => {
+    socket.emit("logd", "hello")
+});

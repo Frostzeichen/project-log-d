@@ -2,9 +2,17 @@
 <html>
     <head>
         <title>Log.d Project Dashboard</title>
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+        <script type="module"></script>
     </head>
     <body>
-        <h1>Hello World!</h1>
-        <p>Log.d Project Dashboard is under construction.</p>
+        <h1>Log.d Project Dashboard</h1>
+        <p>There's not much to see here yet.</p>
+        <p id="viewer"></p>
+        <script>
+            const socket = io();
+            document.querySelector("#viewer").innerHTML = "asd";
+        </script>
     </body>
 </html>
