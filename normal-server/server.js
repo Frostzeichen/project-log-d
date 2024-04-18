@@ -24,6 +24,8 @@ app.get("/log-d.js", (req, res) => {
 });
 
 app.post("/log.d/receive", (req, res) => {
+    req.body.timezone = "PHT"
+    d.divert(req.body, "http://localhost:3001/log.d/receive");
     res.status(200).send("OK");
 });
 
