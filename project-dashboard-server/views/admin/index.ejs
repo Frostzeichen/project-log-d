@@ -12,7 +12,9 @@
         <p id="viewer"></p>
         <script>
             const socket = io();
-            document.querySelector("#viewer").innerHTML = "asd";
+            socket.on("logd", (data) => {
+                document.querySelector("#viewer").innerHTML = data;
+            })
         </script>
     </body>
 </html>
