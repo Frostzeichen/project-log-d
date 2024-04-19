@@ -2,7 +2,7 @@
     "type": "MySQLNotebook",
     "version": "1.0",
     "caption": "DB Notebook",
-    "content": "\\about\nCREATE DATABASE logd;\nUSE logd;\nCREATE TABLE inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    route VARCHAR(50), -- Adjust this if you plan to have a URL larger than 50 chars.\n    utime BIGINT SIGNED, -- int64 signed UNIX time. Refers to time when message was sent to server / user exited app. Convert this to datetime for date-related functions.\n    timezone VARCHAR(5)\n);\nCREATE TABLE keyboard_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    button VARCHAR(31),\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nCREATE TABLE mouse_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    x_position SMALLINT UNSIGNED,\n    y_position SMALLINT UNSIGNED,\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nINSERT INTO inputs (route, utime, timezone)\nVALUE ('/', 1713352865991, 'PHT');\n\nINSERT INTO keyboard_inputs (input_id, button, utime)\nVALUE (LAST_INSERT_ID(), 'a', 1713352865991),\n(LAST_INSERT_ID(), 'b', 1713352865991),\n(LAST_INSERT_ID(), 'c', 1713352865991),\n(LAST_INSERT_ID(), 'd', 1713352865991),\n(LAST_INSERT_ID(), 'e', 1713352865991);\n\nSELECT * FROM keyboard_inputs\nDELETE FROM inputs WHERE utime = 1713352865991\nDROP TABLE keyboard_inputs, mouse_inputs, inputs;\nINSERT INTO inputs (route, utime, timezone) VALUE ('/', 1713352865991, 'PHT'); INSERT INTO keyboard_inputs (input_id, button, utime) VALUE(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991); INSERT INTO mouse_inputs (input_id, x_position, y_position, utime) VALUE(LAST_INSERT_ID(), 107, 107, 1713352865991);\n",
+    "content": "\\about\nCREATE DATABASE logd;\nUSE logd;\nCREATE TABLE inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    route VARCHAR(50), -- Adjust this if you plan to have a URL larger than 50 chars.\n    utime BIGINT SIGNED, -- int64 signed UNIX time. Refers to time when message was sent to server / user exited app. Convert this to datetime for date-related functions.\n    timezone VARCHAR(5)\n);\nCREATE TABLE keyboard_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    button VARCHAR(31),\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nCREATE TABLE mouse_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    x_position SMALLINT UNSIGNED,\n    y_position SMALLINT UNSIGNED,\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nINSERT INTO inputs (route, utime, timezone)\nVALUE ('/', 1713352865991, 'PHT');\n\nINSERT INTO keyboard_inputs (input_id, button, utime)\nVALUE (LAST_INSERT_ID(), 'a', 1713352865991),\n(LAST_INSERT_ID(), 'b', 1713352865991),\n(LAST_INSERT_ID(), 'c', 1713352865991),\n(LAST_INSERT_ID(), 'd', 1713352865991),\n(LAST_INSERT_ID(), 'e', 1713352865991);\n\nSELECT * FROM keyboard_inputs\nDELETE FROM inputs WHERE utime = 1713352865991\nDROP TABLE keyboard_inputs, mouse_inputs, inputs;\nINSERT INTO inputs (route, utime, timezone) VALUE ('/', 1713352865991, 'PHT'); INSERT INTO keyboard_inputs (input_id, button, utime) VALUE(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991); INSERT INTO mouse_inputs (input_id, x_position, y_position, utime) VALUE(LAST_INSERT_ID(), 107, 107, 1713352865991);\nSELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button;\nSELECT DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y') AS date, COUNT(id) AS visitors FROM inputs GROUP BY DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y'); SELECT id, route, utime, timezone FROM inputs; SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button; SELECT x_position, y_position, COUNT(id) AS frequency FROM mouse_inputs GROUP BY x_position, y_position ORDER BY frequency DESC LIMIT 100;\nSELECT x_position, y_position, COUNT(id) AS frequency\nFROM mouse_inputs\nGROUP BY x_position, y_position\nORDER BY frequency DESC\nLIMIT 100;\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 100",
     "options": {
         "tabSize": 4,
         "indentSize": 4,
@@ -15,22 +15,22 @@
             {
                 "inSelectionMode": false,
                 "selectionStart": {
-                    "lineNumber": 36,
-                    "column": 47
+                    "lineNumber": 48,
+                    "column": 20
                 },
                 "position": {
-                    "lineNumber": 36,
-                    "column": 47
+                    "lineNumber": 48,
+                    "column": 20
                 }
             }
         ],
         "viewState": {
             "scrollLeft": 0,
             "firstPosition": {
-                "lineNumber": 29,
+                "lineNumber": 38,
                 "column": 1
             },
-            "firstPositionDeltaTop": -9
+            "firstPositionDeltaTop": -19
         },
         "contributionsState": {
             "editor.contrib.folding": {},
@@ -110,8 +110,8 @@
                         {
                             "type": 4,
                             "index": 0,
-                            "resultId": "b0c3de68-70b2-4fa6-e7a2-c95cfd38e124",
-                            "content": "OK, 0 records retrieved in 0.788ms"
+                            "resultId": "b10f945a-82e1-4178-f1c3-bcc0721d1d4f",
+                            "content": "OK, 0 records retrieved in 1.558ms"
                         }
                     ]
                 },
@@ -286,7 +286,7 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "9b0c6296-c668-4d02-f3d4-36d9a34bf6e5"
+                        "319a23b1-468a-4933-b219-d295751434c3"
                     ]
                 },
                 "currentHeight": 352,
@@ -304,8 +304,8 @@
             },
             "data": [
                 {
-                    "tabId": "3d4e1d68-2bd4-49bb-8845-507029c60794",
-                    "resultId": "9b0c6296-c668-4d02-f3d4-36d9a34bf6e5",
+                    "tabId": "df347c39-c5ff-4ab6-9a5b-7888ca5b6366",
+                    "resultId": "319a23b1-468a-4933-b219-d295751434c3",
                     "rows": [
                         {
                             "0": 41,
@@ -495,20 +495,1276 @@
                 "start": 39,
                 "end": 39,
                 "language": "mysql",
-                "currentHeight": 180,
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "c1d2d629-63d9-461e-9207-910f5f91ae6e"
+                    ]
+                },
+                "currentHeight": 159.0625,
                 "statements": [
                     {
                         "delimiter": ";",
                         "span": {
                             "start": 0,
+                            "length": 73
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 73,
                             "length": 0
+                        },
+                        "contentStart": 73,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "df347c39-c5ff-4ab6-9a5b-7888ca5b6366",
+                    "resultId": "c1d2d629-63d9-461e-9207-910f5f91ae6e",
+                    "rows": [
+                        {
+                            "0": "F5",
+                            "1": 5
+                        },
+                        {
+                            "0": "Meta",
+                            "1": 2
+                        },
+                        {
+                            "0": "Control",
+                            "1": 2
+                        },
+                        {
+                            "0": "Shift",
+                            "1": 1
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "button",
+                            "field": "0",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "presses",
+                            "field": "1",
+                            "dataType": {
+                                "type": 4
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 4 records retrieved in 1.256ms"
+                    },
+                    "totalRowCount": 4,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 40,
+                "end": 40,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "8f687c5e-d4f5-4bb5-9e8e-2f41ad5c67c0",
+                        "2b65f763-20bf-421a-d323-b6c321dc8bca",
+                        "f3e6080d-3543-4e43-8603-5c512b3546a4"
+                    ]
+                },
+                "currentHeight": 140.03125,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 161
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 161,
+                            "length": 47
+                        },
+                        "contentStart": 162,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 208,
+                            "length": 74
+                        },
+                        "contentStart": 209,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 282,
+                            "length": 139
+                        },
+                        "contentStart": 283,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "df347c39-c5ff-4ab6-9a5b-7888ca5b6366",
+                    "resultId": "8f687c5e-d4f5-4bb5-9e8e-2f41ad5c67c0",
+                    "rows": [
+                        {
+                            "0": "April 18 2024",
+                            "1": 7
+                        },
+                        {
+                            "0": "April 19 2024",
+                            "1": 7
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "date",
+                            "field": "0",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "visitors",
+                            "field": "1",
+                            "dataType": {
+                                "type": 4
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 2 records retrieved in 18.534ms"
+                    },
+                    "totalRowCount": 2,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "SELECT DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y') AS date, COUNT(id) AS visitors FROM inputs GROUP BY DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y')"
+                },
+                {
+                    "tabId": "df347c39-c5ff-4ab6-9a5b-7888ca5b6366",
+                    "resultId": "2b65f763-20bf-421a-d323-b6c321dc8bca",
+                    "rows": [
+                        {
+                            "0": 11,
+                            "1": "/",
+                            "2": 1713439383166,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 12,
+                            "1": "/",
+                            "2": 1713439389339,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 13,
+                            "1": "/",
+                            "2": 1713439389757,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 14,
+                            "1": "/",
+                            "2": 1713439390007,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 15,
+                            "1": "/",
+                            "2": 1713446552781,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 16,
+                            "1": "/",
+                            "2": 1713446630757,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 17,
+                            "1": "/",
+                            "2": 1713456851523,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 18,
+                            "1": "/",
+                            "2": 1713527083796,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 19,
+                            "1": "/",
+                            "2": 1713527084462,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 20,
+                            "1": "/",
+                            "2": 1713527085672,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 21,
+                            "1": "/",
+                            "2": 1713532497544,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 22,
+                            "1": "/",
+                            "2": 1713532515886,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 23,
+                            "1": "/",
+                            "2": 1713532524430,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 24,
+                            "1": "/",
+                            "2": 1713532525090,
+                            "3": "PHT"
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "id",
+                            "field": "0",
+                            "dataType": {
+                                "type": 4
+                            }
+                        },
+                        {
+                            "title": "route",
+                            "field": "1",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "utime",
+                            "field": "2",
+                            "dataType": {
+                                "type": 5
+                            }
+                        },
+                        {
+                            "title": "timezone",
+                            "field": "3",
+                            "dataType": {
+                                "type": 17
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 14 records retrieved in 0.621ms"
+                    },
+                    "totalRowCount": 14,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 1,
+                    "sql": " SELECT id, route, utime, timezone FROM inputs"
+                },
+                {
+                    "tabId": "df347c39-c5ff-4ab6-9a5b-7888ca5b6366",
+                    "resultId": "f3e6080d-3543-4e43-8603-5c512b3546a4",
+                    "rows": [
+                        {
+                            "0": "F5",
+                            "1": 6
+                        },
+                        {
+                            "0": "Meta",
+                            "1": 2
+                        },
+                        {
+                            "0": "Control",
+                            "1": 5
+                        },
+                        {
+                            "0": "Shift",
+                            "1": 1
+                        },
+                        {
+                            "0": "s",
+                            "1": 4
+                        },
+                        {
+                            "0": "a",
+                            "1": 2
+                        },
+                        {
+                            "0": "d",
+                            "1": 2
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "button",
+                            "field": "0",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "presses",
+                            "field": "1",
+                            "dataType": {
+                                "type": 4
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 7 records retrieved in 1.022ms"
+                    },
+                    "totalRowCount": 7,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 2,
+                    "sql": " SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 41,
+                "end": 45,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "fc854800-80dd-4177-f098-18c8d38f54bd"
+                    ]
+                },
+                "currentHeight": 352,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 138
                         },
                         "contentStart": 0,
                         "state": 0
                     }
                 ]
             },
-            "data": []
+            "data": [
+                {
+                    "tabId": "df347c39-c5ff-4ab6-9a5b-7888ca5b6366",
+                    "resultId": "fc854800-80dd-4177-f098-18c8d38f54bd",
+                    "rows": [
+                        {
+                            "0": 22,
+                            "1": 18,
+                            "2": 2
+                        },
+                        {
+                            "0": 847,
+                            "1": 883,
+                            "2": 2
+                        },
+                        {
+                            "0": 1,
+                            "1": 9,
+                            "2": 2
+                        },
+                        {
+                            "0": 4,
+                            "1": 16,
+                            "2": 2
+                        },
+                        {
+                            "0": 135,
+                            "1": 22,
+                            "2": 2
+                        },
+                        {
+                            "0": 18,
+                            "1": 7,
+                            "2": 1
+                        },
+                        {
+                            "0": 27,
+                            "1": 8,
+                            "2": 1
+                        },
+                        {
+                            "0": 66,
+                            "1": 53,
+                            "2": 1
+                        },
+                        {
+                            "0": 92,
+                            "1": 97,
+                            "2": 1
+                        },
+                        {
+                            "0": 115,
+                            "1": 130,
+                            "2": 1
+                        },
+                        {
+                            "0": 130,
+                            "1": 147,
+                            "2": 1
+                        },
+                        {
+                            "0": 141,
+                            "1": 164,
+                            "2": 1
+                        },
+                        {
+                            "0": 147,
+                            "1": 174,
+                            "2": 1
+                        },
+                        {
+                            "0": 174,
+                            "1": 181,
+                            "2": 1
+                        },
+                        {
+                            "0": 240,
+                            "1": 201,
+                            "2": 1
+                        },
+                        {
+                            "0": 26,
+                            "1": 217,
+                            "2": 1
+                        },
+                        {
+                            "0": 100,
+                            "1": 227,
+                            "2": 1
+                        },
+                        {
+                            "0": 188,
+                            "1": 227,
+                            "2": 1
+                        },
+                        {
+                            "0": 619,
+                            "1": 278,
+                            "2": 1
+                        },
+                        {
+                            "0": 669,
+                            "1": 282,
+                            "2": 1
+                        },
+                        {
+                            "0": 32,
+                            "1": 0,
+                            "2": 1
+                        },
+                        {
+                            "0": 108,
+                            "1": 3,
+                            "2": 1
+                        },
+                        {
+                            "0": 192,
+                            "1": 27,
+                            "2": 1
+                        },
+                        {
+                            "0": 14,
+                            "1": 8,
+                            "2": 1
+                        },
+                        {
+                            "0": 140,
+                            "1": 54,
+                            "2": 1
+                        },
+                        {
+                            "0": 232,
+                            "1": 82,
+                            "2": 1
+                        },
+                        {
+                            "0": 651,
+                            "1": 153,
+                            "2": 1
+                        },
+                        {
+                            "0": 667,
+                            "1": 159,
+                            "2": 1
+                        },
+                        {
+                            "0": 148,
+                            "1": 173,
+                            "2": 1
+                        },
+                        {
+                            "0": 46,
+                            "1": 181,
+                            "2": 1
+                        },
+                        {
+                            "0": 254,
+                            "1": 195,
+                            "2": 1
+                        },
+                        {
+                            "0": 204,
+                            "1": 209,
+                            "2": 1
+                        },
+                        {
+                            "0": 186,
+                            "1": 219,
+                            "2": 1
+                        },
+                        {
+                            "0": 181,
+                            "1": 209,
+                            "2": 1
+                        },
+                        {
+                            "0": 178,
+                            "1": 204,
+                            "2": 1
+                        },
+                        {
+                            "0": 197,
+                            "1": 201,
+                            "2": 1
+                        },
+                        {
+                            "0": 214,
+                            "1": 205,
+                            "2": 1
+                        },
+                        {
+                            "0": 233,
+                            "1": 208,
+                            "2": 1
+                        },
+                        {
+                            "0": 2,
+                            "1": 215,
+                            "2": 1
+                        },
+                        {
+                            "0": 30,
+                            "1": 225,
+                            "2": 1
+                        },
+                        {
+                            "0": 63,
+                            "1": 233,
+                            "2": 1
+                        },
+                        {
+                            "0": 82,
+                            "1": 237,
+                            "2": 1
+                        },
+                        {
+                            "0": 98,
+                            "1": 241,
+                            "2": 1
+                        },
+                        {
+                            "0": 111,
+                            "1": 245,
+                            "2": 1
+                        },
+                        {
+                            "0": 133,
+                            "1": 248,
+                            "2": 1
+                        },
+                        {
+                            "0": 155,
+                            "1": 251,
+                            "2": 1
+                        },
+                        {
+                            "0": 190,
+                            "1": 251,
+                            "2": 1
+                        },
+                        {
+                            "0": 24,
+                            "1": 251,
+                            "2": 1
+                        },
+                        {
+                            "0": 29,
+                            "1": 245,
+                            "2": 1
+                        },
+                        {
+                            "0": 19,
+                            "1": 236,
+                            "2": 1
+                        },
+                        {
+                            "0": 9,
+                            "1": 224,
+                            "2": 1
+                        },
+                        {
+                            "0": 265,
+                            "1": 216,
+                            "2": 1
+                        },
+                        {
+                            "0": 257,
+                            "1": 211,
+                            "2": 1
+                        },
+                        {
+                            "0": 245,
+                            "1": 202,
+                            "2": 1
+                        },
+                        {
+                            "0": 231,
+                            "1": 194,
+                            "2": 1
+                        },
+                        {
+                            "0": 214,
+                            "1": 181,
+                            "2": 1
+                        },
+                        {
+                            "0": 190,
+                            "1": 165,
+                            "2": 1
+                        },
+                        {
+                            "0": 182,
+                            "1": 159,
+                            "2": 1
+                        },
+                        {
+                            "0": 175,
+                            "1": 156,
+                            "2": 1
+                        },
+                        {
+                            "0": 167,
+                            "1": 148,
+                            "2": 1
+                        },
+                        {
+                            "0": 162,
+                            "1": 142,
+                            "2": 1
+                        },
+                        {
+                            "0": 156,
+                            "1": 142,
+                            "2": 1
+                        },
+                        {
+                            "0": 150,
+                            "1": 147,
+                            "2": 1
+                        },
+                        {
+                            "0": 147,
+                            "1": 153,
+                            "2": 1
+                        },
+                        {
+                            "0": 140,
+                            "1": 160,
+                            "2": 1
+                        },
+                        {
+                            "0": 137,
+                            "1": 168,
+                            "2": 1
+                        },
+                        {
+                            "0": 836,
+                            "1": 834,
+                            "2": 1
+                        },
+                        {
+                            "0": 128,
+                            "1": 188,
+                            "2": 1
+                        },
+                        {
+                            "0": 125,
+                            "1": 199,
+                            "2": 1
+                        },
+                        {
+                            "0": 123,
+                            "1": 209,
+                            "2": 1
+                        },
+                        {
+                            "0": 120,
+                            "1": 220,
+                            "2": 1
+                        },
+                        {
+                            "0": 121,
+                            "1": 233,
+                            "2": 1
+                        },
+                        {
+                            "0": 120,
+                            "1": 226,
+                            "2": 1
+                        },
+                        {
+                            "0": 120,
+                            "1": 219,
+                            "2": 1
+                        },
+                        {
+                            "0": 120,
+                            "1": 210,
+                            "2": 1
+                        },
+                        {
+                            "0": 122,
+                            "1": 195,
+                            "2": 1
+                        },
+                        {
+                            "0": 118,
+                            "1": 189,
+                            "2": 1
+                        },
+                        {
+                            "0": 117,
+                            "1": 183,
+                            "2": 1
+                        },
+                        {
+                            "0": 114,
+                            "1": 160,
+                            "2": 1
+                        },
+                        {
+                            "0": 160,
+                            "1": 88,
+                            "2": 1
+                        },
+                        {
+                            "0": 154,
+                            "1": 96,
+                            "2": 1
+                        },
+                        {
+                            "0": 149,
+                            "1": 104,
+                            "2": 1
+                        },
+                        {
+                            "0": 153,
+                            "1": 98,
+                            "2": 1
+                        },
+                        {
+                            "0": 156,
+                            "1": 92,
+                            "2": 1
+                        },
+                        {
+                            "0": 162,
+                            "1": 85,
+                            "2": 1
+                        },
+                        {
+                            "0": 169,
+                            "1": 81,
+                            "2": 1
+                        },
+                        {
+                            "0": 186,
+                            "1": 77,
+                            "2": 1
+                        },
+                        {
+                            "0": 227,
+                            "1": 59,
+                            "2": 1
+                        },
+                        {
+                            "0": 217,
+                            "1": 74,
+                            "2": 1
+                        },
+                        {
+                            "0": 210,
+                            "1": 79,
+                            "2": 1
+                        },
+                        {
+                            "0": 206,
+                            "1": 85,
+                            "2": 1
+                        },
+                        {
+                            "0": 200,
+                            "1": 90,
+                            "2": 1
+                        },
+                        {
+                            "0": 194,
+                            "1": 98,
+                            "2": 1
+                        },
+                        {
+                            "0": 261,
+                            "1": 96,
+                            "2": 1
+                        },
+                        {
+                            "0": 628,
+                            "1": 97,
+                            "2": 1
+                        },
+                        {
+                            "0": 665,
+                            "1": 41,
+                            "2": 1
+                        },
+                        {
+                            "0": 675,
+                            "1": 23,
+                            "2": 1
+                        },
+                        {
+                            "0": 675,
+                            "1": 3,
+                            "2": 1
+                        },
+                        {
+                            "0": 88,
+                            "1": 250,
+                            "2": 1
+                        },
+                        {
+                            "0": 94,
+                            "1": 250,
+                            "2": 1
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "x_position",
+                            "field": "0",
+                            "dataType": {
+                                "type": 2
+                            }
+                        },
+                        {
+                            "title": "y_position",
+                            "field": "1",
+                            "dataType": {
+                                "type": 2
+                            }
+                        },
+                        {
+                            "title": "frequency",
+                            "field": "2",
+                            "dataType": {
+                                "type": 4
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 100 records retrieved in 1.77ms"
+                    },
+                    "totalRowCount": 100,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "SELECT x_position, y_position, COUNT(id) AS frequency\nFROM mouse_inputs\nGROUP BY x_position, y_position\nORDER BY frequency DESC\nLIMIT 100"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 46,
+                "end": 49,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "d50f78e2-1a47-440f-cd9c-55fdd4d281a7"
+                    ]
+                },
+                "currentHeight": 36,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 70
+                        },
+                        "contentStart": 0,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "df347c39-c5ff-4ab6-9a5b-7888ca5b6366",
+                    "resultId": "d50f78e2-1a47-440f-cd9c-55fdd4d281a7",
+                    "rows": [
+                        {
+                            "0": 934
+                        },
+                        {
+                            "0": 927
+                        },
+                        {
+                            "0": 927
+                        },
+                        {
+                            "0": 921
+                        },
+                        {
+                            "0": 920
+                        },
+                        {
+                            "0": 915
+                        },
+                        {
+                            "0": 913
+                        },
+                        {
+                            "0": 908
+                        },
+                        {
+                            "0": 905
+                        },
+                        {
+                            "0": 899
+                        },
+                        {
+                            "0": 895
+                        },
+                        {
+                            "0": 890
+                        },
+                        {
+                            "0": 889
+                        },
+                        {
+                            "0": 883
+                        },
+                        {
+                            "0": 883
+                        },
+                        {
+                            "0": 877
+                        },
+                        {
+                            "0": 877
+                        },
+                        {
+                            "0": 871
+                        },
+                        {
+                            "0": 870
+                        },
+                        {
+                            "0": 863
+                        },
+                        {
+                            "0": 861
+                        },
+                        {
+                            "0": 853
+                        },
+                        {
+                            "0": 853
+                        },
+                        {
+                            "0": 846
+                        },
+                        {
+                            "0": 842
+                        },
+                        {
+                            "0": 840
+                        },
+                        {
+                            "0": 835
+                        },
+                        {
+                            "0": 834
+                        },
+                        {
+                            "0": 825
+                        },
+                        {
+                            "0": 814
+                        },
+                        {
+                            "0": 802
+                        },
+                        {
+                            "0": 792
+                        },
+                        {
+                            "0": 779
+                        },
+                        {
+                            "0": 764
+                        },
+                        {
+                            "0": 753
+                        },
+                        {
+                            "0": 745
+                        },
+                        {
+                            "0": 733
+                        },
+                        {
+                            "0": 718
+                        },
+                        {
+                            "0": 702
+                        },
+                        {
+                            "0": 691
+                        },
+                        {
+                            "0": 680
+                        },
+                        {
+                            "0": 667
+                        },
+                        {
+                            "0": 653
+                        },
+                        {
+                            "0": 640
+                        },
+                        {
+                            "0": 623
+                        },
+                        {
+                            "0": 608
+                        },
+                        {
+                            "0": 587
+                        },
+                        {
+                            "0": 560
+                        },
+                        {
+                            "0": 543
+                        },
+                        {
+                            "0": 522
+                        },
+                        {
+                            "0": 513
+                        },
+                        {
+                            "0": 505
+                        },
+                        {
+                            "0": 502
+                        },
+                        {
+                            "0": 494
+                        },
+                        {
+                            "0": 489
+                        },
+                        {
+                            "0": 472
+                        },
+                        {
+                            "0": 472
+                        },
+                        {
+                            "0": 464
+                        },
+                        {
+                            "0": 460
+                        },
+                        {
+                            "0": 454
+                        },
+                        {
+                            "0": 440
+                        },
+                        {
+                            "0": 434
+                        },
+                        {
+                            "0": 416
+                        },
+                        {
+                            "0": 413
+                        },
+                        {
+                            "0": 407
+                        },
+                        {
+                            "0": 402
+                        },
+                        {
+                            "0": 394
+                        },
+                        {
+                            "0": 381
+                        },
+                        {
+                            "0": 367
+                        },
+                        {
+                            "0": 366
+                        },
+                        {
+                            "0": 365
+                        },
+                        {
+                            "0": 363
+                        },
+                        {
+                            "0": 303
+                        },
+                        {
+                            "0": 303
+                        },
+                        {
+                            "0": 303
+                        },
+                        {
+                            "0": 297
+                        },
+                        {
+                            "0": 294
+                        },
+                        {
+                            "0": 291
+                        },
+                        {
+                            "0": 288
+                        },
+                        {
+                            "0": 284
+                        },
+                        {
+                            "0": 283
+                        },
+                        {
+                            "0": 282
+                        },
+                        {
+                            "0": 282
+                        },
+                        {
+                            "0": 282
+                        },
+                        {
+                            "0": 282
+                        },
+                        {
+                            "0": 282
+                        },
+                        {
+                            "0": 282
+                        },
+                        {
+                            "0": 280
+                        },
+                        {
+                            "0": 278
+                        },
+                        {
+                            "0": 276
+                        },
+                        {
+                            "0": 276
+                        },
+                        {
+                            "0": 274
+                        },
+                        {
+                            "0": 270
+                        },
+                        {
+                            "0": 270
+                        },
+                        {
+                            "0": 269
+                        },
+                        {
+                            "0": 263
+                        },
+                        {
+                            "0": 258
+                        },
+                        {
+                            "0": 258
+                        },
+                        {
+                            "0": 257
+                        },
+                        {
+                            "0": 256
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "y_position",
+                            "field": "0",
+                            "dataType": {
+                                "type": 2
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 100 records retrieved in 2.913ms"
+                    },
+                    "totalRowCount": 100,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "SELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 100"
+                }
+            ]
         }
     ]
 }
