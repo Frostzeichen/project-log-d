@@ -3,18 +3,179 @@
     <head>
         <title>Log.d Project Dashboard</title>
         <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-        <script type="module"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        <script type="module" src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     </head>
     <body>
-        <h1>Log.d Project Dashboard</h1>
-        <p>There's not much to see here yet.</p>
-        <p id="viewer"></p>
+        <h1>Log.d Project Dashboard (Metrics)</h1>
+        <div style="width: 600px; height: 600px;">
+            <canvas id="dailyVisits" width="800" height="450"></canvas>
+        </div>
+        <div style="width: 600px; height: 600px;">
+            <canvas id="keyFrequencies" width="800" height="450"></canvas>
+        </div>
+        <div style="width: 600px; height: 600px;">
+            <canvas id="bubble-chart" width="800" height="400"></canvas>
+        </div>
+        <h2>List of all Page Visits</h2>
+        <table>
+            <thead>
+                <th>ID</th>
+                <th>ROUTE</th>
+                <th>TIME</th>
+                <th>COUNTRY</th>
+            </thead>
+            <tbody id="pageViews">
+            </tbody>
+        </table>
         <script>
             const socket = io();
             socket.on("logd", (data) => {
-                document.querySelector("#viewer").innerHTML = data;
-            })
+                console.log(data[0])
+                // WARNING: These charts will keep piling as the dataset increases.
+                // TODO: Fix the above warning.
+                { // Site Visit Histogram
+                    dateDataset = [];
+                    visitorsDataset = [];
+                    data[0].forEach(item => {
+                        dateDataset.push(item.date);
+                        visitorsDataset.push(item.visitors);
+                    });
+
+                    new Chart(document.getElementById("dailyVisits"), {
+                        type: 'bar',
+                        data: {
+                            labels: dateDataset,
+                            datasets: [
+                                {
+                                    label: "Number of visits at the documentation website",
+                                    backgroundColor: "#3e95cd",
+                                    data: visitorsDataset,
+                                    min: 0,
+                                    max: 10
+                                }
+                            ]
+                        },
+                        options: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: 'Documentation Website Visitors'
+                            },
+                            scales: {
+                                yAxes: [{
+                                    display: true,
+                                    ticks: {
+                                        beginAtZero: true,
+                                        steps: 10,
+                                        stepValue: 5,
+                                        max: 10,
+                                        min: 0
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                }
+
+                { // List of all Page Visits
+                    let pageViews = "";
+                    data[1].forEach((item) => {
+                        pageViews += `<tr><td>${item.id}</td><td>${item.route}</td><td>${new Date(item.utime)}</td><td>${item.timezone}</td></tr>`
+                    });
+                    document.querySelector("#pageViews").innerHTML = pageViews;
+                }
+
+                { // Site Visit Histogram
+                    keyDataset = [];
+                    pressesDataset = [];
+                    data[2].forEach(item => {
+                        keyDataset.push(item.button);
+                        pressesDataset.push(item.presses);
+                    });
+
+                    new Chart(document.getElementById("keyFrequencies"), {
+                        type: 'bar',
+                        data: {
+                            labels: keyDataset,
+                            datasets: [
+                                {
+                                    label: "Number of times pressed",
+                                    backgroundColor: "#3e95cd",
+                                    data: pressesDataset,
+                                    min: 0,
+                                    max: 10
+                                }
+                            ]
+                        },
+                        options: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: "Key Frequencies"
+                            },
+                            scales: {
+                                yAxes: [{
+                                    display: true,
+                                    ticks: {
+                                        beginAtZero: true,
+                                        steps: 10,
+                                        stepValue: 5,
+                                        max: 10,
+                                        min: 0
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                }
+
+                {
+                    let positionDataset = [];
+                    data[3].forEach(item => {
+                        positionDataset.push({
+                            backgroundColor: "rgba(255,221,50,0.2)",
+                            borderColor: "rgba(255,221,50,1)",
+                            data: [{
+                                x: item.x_position,
+                                y: item.y_position,
+                                r: item.frequency
+                            }]
+                        });
+                    });
+
+                    new Chart(document.getElementById("bubble-chart"), {
+                        type: 'bubble',
+                        data: {
+                            datasets: positionDataset
+                        },
+                        options: {
+                            title: {
+                                display: true,
+                                text: "100 Most Frequent Mouse Spots"
+                            },
+                            legend: {
+                                display: false
+                            },
+                            scales: {
+                                yAxes: [{
+                                    display: false,
+                                    ticks: {
+                                        reverse: true
+                                    }
+                                }],
+                                xAxes: [{ 
+                                    display: false
+                                }]
+                            },
+                            legend: {
+                                display: false
+                            }
+                        }
+                    });
+
+                }
+            });
         </script>
     </body>
 </html>
