@@ -41,5 +41,12 @@ const server = app.listen(process.env.SV_PORT);
 const io = require("socket.io")(server);
 
 io.on("connection", (socket) => {
-    socket.emit("logd", "hello")
+    connection.query(
+        "SELECT DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y') AS date, COUNT(id) AS visitors FROM inputs GROUP BY DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y'); SELECT id, route, utime, timezone FROM inputs; SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button; SELECT x_position, y_position, COUNT(id) AS frequency FROM mouse_inputs GROUP BY x_position, y_position ORDER BY frequency DESC LIMIT 100;",
+        (err, row) => {
+            if (err) throw err;
+            socket.emit("logd", row);
+        }
+    );
+    
 });
