@@ -11,16 +11,21 @@ log = {
 const submitLog = (log) => {
     log.timestamp = Date.now();
 
-    fetch("/logd/receive", {
-        method: "post",
-        headers: { // Required headers. See Postman documentation "user to normal".
-            "Content-Type": "application/json",
-            "Accept": "*/*"
-        },
-        mode: 'cors',
-        body: JSON.stringify(log),
-        keepalive: true // Keep alive until after window close. See: https://stackoverflow.com/questions/63157089/sending-post-request-with-fetch-after-closing-the-browser-with-beforeunload
-    });
+    try {
+        fetch("/logd/receive", {
+            method: "post",
+            headers: { // Required headers. See Postman documentation "user to normal".
+                "Content-Type": "application/json",
+                "Accept": "*/*"
+            },
+            mode: 'cors',
+            body: JSON.stringify(log),
+            keepalive: true // Keep alive until after window close. See: https://stackoverflow.com/questions/63157089/sending-post-request-with-fetch-after-closing-the-browser-with-beforeunload
+        });
+    }
+    catch {
+        console.error("Warning: Logd Service Unreachable")
+    }
 }
 
 // On page load.
