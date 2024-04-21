@@ -15,7 +15,9 @@ app.get("/docs", (req, res) => {
     res.render("docs/index.ejs");
 });
 
-app.get("/docs")
+app.get("/docs/:title", (req, res) => {
+    res.render(`docs/${req.params.title}.ejs`)
+});
 
 app.get("/favicon.ico", (req, res) => {
     res.sendFile(__dirname + "/views/assets/favicon.ico");
@@ -29,7 +31,7 @@ app.get("/logd.js", (req, res) => {
 app.get("/logd/download/logd.zip", (req, res) => {
     try { res.redirect("http://localhost:3001/logd/download/logd.zip"); }
     catch { res.status(503).send("Service Unavailable") }
-})
+});
 
 app.post("/logd/receive", (req, res) => {
     try {
