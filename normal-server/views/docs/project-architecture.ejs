@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Log.d Documentation Page</title>
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/normalize.css@8.0.1/normalize.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.esm.min.mjs"></script>
+    </head>
+    <body>
+        <div class="container">
+            <header class="row">
+                <h1>About Project Log.d</h1>
+            </header>
+            <section class="row">
+                <nav class="col col-4">
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="btn btn-secondary w-75">About Project Log.d</a></li>
+                        <li><a href="/logd/download/logd.zip" target="_blank" class="btn btn-success w-75">Download</a></li>
+                        <li><h3>Documentation</h3></li>
+                        <li><a href="/docs/project-architecture" class="btn btn-primary w-75">Project Architecture</a></li>
+                        <li><a href="/docs/data-transfer-mechanism" class="btn btn-primary w-75">Data Transfer Mechanism</a></li>
+                        <li><a href="/docs/schema" class="btn btn-primary w-75">Schema</a></li>
+                        <li><a href="/docs/notes-on-schema" class="btn btn-primary w-75">Notes on Schema</a></li>
+                        <li><a href="/docs/api" class="btn btn-primary w-75">API</a></li>
+                        <li><a href="https://github.com/Frostzeichen/project-log-d" class="btn btn-primary w-75">GitHub Repository</a></li>
+                        <li><a href="http://localhost:3001" class="btn btn-dark w-75">Project Dashboard Server</a></li>
+                    </ul>
+                </nav>
+                <main class="col">
+                    <h2>Project Architecture</h2>
+                    <img src="https://i.imgur.com/Jtq9Luo.png" width="100%">
+                    <p>This is more of a wire diagram of what goes on in the project.</p>
+                    <p>The project has two servers to demonstrate how Log.d can work in a microservice architecture.</p>
+                </main>
+            </section>
+        </div>
+        <script src="/logd.js">
+            // Returns error: Uncaught (in promise) TypeError: NetworkError when attempting to fetch resource.
+            // Probable fix: Deploy this with that CDN thing. I think that should work.
+        </script>
+    </body>
+</html>
