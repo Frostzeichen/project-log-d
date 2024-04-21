@@ -2,7 +2,7 @@
     "type": "MySQLNotebook",
     "version": "1.0",
     "caption": "DB Notebook",
-    "content": "\\about\nCREATE DATABASE logd;\nUSE logd;\nCREATE TABLE inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    route VARCHAR(50), -- Adjust this if you plan to have a URL larger than 50 chars.\n    utime BIGINT SIGNED, -- int64 signed UNIX time. Refers to time when message was sent to server / user exited app. Convert this to datetime for date-related functions.\n    timezone VARCHAR(5)\n);\nCREATE TABLE keyboard_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    button VARCHAR(31),\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nCREATE TABLE mouse_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    x_position SMALLINT UNSIGNED,\n    y_position SMALLINT UNSIGNED,\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nINSERT INTO inputs (route, utime, timezone)\nVALUE ('/', 1713352865991, 'PHT');\n\nINSERT INTO keyboard_inputs (input_id, button, utime)\nVALUE (LAST_INSERT_ID(), 'a', 1713352865991),\n(LAST_INSERT_ID(), 'b', 1713352865991),\n(LAST_INSERT_ID(), 'c', 1713352865991),\n(LAST_INSERT_ID(), 'd', 1713352865991),\n(LAST_INSERT_ID(), 'e', 1713352865991);\n\nSELECT * FROM keyboard_inputs\nDELETE FROM inputs WHERE utime = 1713352865991\nDROP TABLE keyboard_inputs, mouse_inputs, inputs;\nINSERT INTO inputs (route, utime, timezone) VALUE ('/', 1713352865991, 'PHT'); INSERT INTO keyboard_inputs (input_id, button, utime) VALUE(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991); INSERT INTO mouse_inputs (input_id, x_position, y_position, utime) VALUE(LAST_INSERT_ID(), 107, 107, 1713352865991);\nSELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button;\nSELECT DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y') AS date, COUNT(id) AS visitors FROM inputs GROUP BY DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y'); SELECT id, route, utime, timezone FROM inputs; SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button; SELECT x_position, y_position, COUNT(id) AS frequency FROM mouse_inputs GROUP BY x_position, y_position ORDER BY frequency DESC LIMIT 100;\nSELECT x_position, y_position, COUNT(id) AS frequency\nFROM mouse_inputs\nGROUP BY x_position, y_position\nORDER BY frequency DESC\nLIMIT 100;\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 100\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 1\nSELECT x_position, y_position, utime\nFROM mouse_inputs\nWHERE input_id = 22\nSELECT MAX(mouse_inputs.utime) - MIN(mouse_inputs.utime)\nFROM mouse_inputs\nWHERE input_id = 22\n",
+    "content": "\\about\nCREATE DATABASE logd;\nUSE logd;\nCREATE TABLE inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    route VARCHAR(50), -- Adjust this if you plan to have a URL larger than 50 chars.\n    utime BIGINT SIGNED, -- int64 signed UNIX time. Refers to time when message was sent to server / user exited app. Convert this to datetime for date-related functions.\n    timezone VARCHAR(5)\n);\nCREATE TABLE keyboard_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    button VARCHAR(31),\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nCREATE TABLE mouse_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    x_position SMALLINT UNSIGNED,\n    y_position SMALLINT UNSIGNED,\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nINSERT INTO inputs (route, utime, timezone)\nVALUE ('/', 1713352865991, 'PHT');\n\nINSERT INTO keyboard_inputs (input_id, button, utime)\nVALUE (LAST_INSERT_ID(), 'a', 1713352865991),\n(LAST_INSERT_ID(), 'b', 1713352865991),\n(LAST_INSERT_ID(), 'c', 1713352865991),\n(LAST_INSERT_ID(), 'd', 1713352865991),\n(LAST_INSERT_ID(), 'e', 1713352865991);\n\nSELECT * FROM keyboard_inputs\nDELETE FROM inputs WHERE utime = 1713352865991\nDROP TABLE keyboard_inputs, mouse_inputs, inputs;\nINSERT INTO inputs (route, utime, timezone) VALUE ('/', 1713352865991, 'PHT'); INSERT INTO keyboard_inputs (input_id, button, utime) VALUE(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991); INSERT INTO mouse_inputs (input_id, x_position, y_position, utime) VALUE(LAST_INSERT_ID(), 107, 107, 1713352865991);\nSELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button;\nSELECT DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y') AS date, COUNT(id) AS visitors FROM inputs GROUP BY DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y'); SELECT id, route, utime, timezone FROM inputs; SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button; SELECT x_position, y_position, COUNT(id) AS frequency FROM mouse_inputs GROUP BY x_position, y_position ORDER BY frequency DESC LIMIT 100; SELECT id FROM inputs;\nSELECT x_position, y_position, COUNT(id) AS frequency\nFROM mouse_inputs\nGROUP BY x_position, y_position\nORDER BY frequency DESC\nLIMIT 100;\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 100\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 1\nSELECT x_position, y_position, (SELECT MAX(utime) FROM mouse_inputs WHERE input_id = 22) - utime AS millis\nFROM mouse_inputs\nWHERE input_id = 22\nORDER BY millis;\nSELECT MAX(mouse_inputs.utime) - MIN(mouse_inputs.utime) as timeOnPage\nFROM mouse_inputs\nWHERE input_id = 22\nSELECT id FROM inputs;\n",
     "options": {
         "tabSize": 4,
         "indentSize": 4,
@@ -15,22 +15,22 @@
             {
                 "inSelectionMode": false,
                 "selectionStart": {
-                    "lineNumber": 59,
-                    "column": 20
+                    "lineNumber": 40,
+                    "column": 445
                 },
                 "position": {
-                    "lineNumber": 59,
-                    "column": 20
+                    "lineNumber": 40,
+                    "column": 445
                 }
             }
         ],
         "viewState": {
             "scrollLeft": 0,
             "firstPosition": {
-                "lineNumber": 54,
+                "lineNumber": 40,
                 "column": 1
             },
-            "firstPositionDeltaTop": 41
+            "firstPositionDeltaTop": 60
         },
         "contributionsState": {
             "editor.contrib.folding": {},
@@ -580,12 +580,15 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "7feb01a4-4b07-496e-c6fb-5ca2f8c0fba6",
-                        "ba7d988d-7698-4e72-fea8-8ff6233a3bc8",
-                        "fea2ff8a-dbb2-4485-bc47-0d3cfff96d0a"
+                        "584b268d-ff8c-42a2-d848-297596a99966",
+                        "32bf45c4-0561-4587-fcb3-f2194b00c85b",
+                        "e765ef80-f56f-43f8-e46d-7a6b1e4c4130",
+                        "63a272cc-4c64-4818-8ce2-4e554a2ae5d1",
+                        "c1b62ff8-b52c-4678-90a0-33a24a0417fd"
                     ]
                 },
                 "currentHeight": 140.03125,
+                "currentSet": 5,
                 "statements": [
                     {
                         "delimiter": ";",
@@ -622,13 +625,31 @@
                         },
                         "contentStart": 283,
                         "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 421,
+                            "length": 23
+                        },
+                        "contentStart": 422,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 444,
+                            "length": 0
+                        },
+                        "contentStart": 443,
+                        "state": 3
                     }
                 ]
             },
             "data": [
                 {
                     "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "7feb01a4-4b07-496e-c6fb-5ca2f8c0fba6",
+                    "resultId": "584b268d-ff8c-42a2-d848-297596a99966",
                     "rows": [
                         {
                             "0": "April 18 2024",
@@ -636,7 +657,15 @@
                         },
                         {
                             "0": "April 19 2024",
-                            "1": 7
+                            "1": 14
+                        },
+                        {
+                            "0": "April 20 2024",
+                            "1": 4
+                        },
+                        {
+                            "0": "April 21 2024",
+                            "1": 41
                         }
                     ],
                     "columns": [
@@ -656,9 +685,9 @@
                         }
                     ],
                     "executionInfo": {
-                        "text": "OK, 2 records retrieved in 18.534ms"
+                        "text": "OK, 4 records retrieved in 2.461ms"
                     },
-                    "totalRowCount": 2,
+                    "totalRowCount": 4,
                     "hasMoreRows": false,
                     "currentPage": 0,
                     "index": 0,
@@ -666,7 +695,7 @@
                 },
                 {
                     "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "ba7d988d-7698-4e72-fea8-8ff6233a3bc8",
+                    "resultId": "32bf45c4-0561-4587-fcb3-f2194b00c85b",
                     "rows": [
                         {
                             "0": 11,
@@ -751,6 +780,318 @@
                             "1": "/",
                             "2": 1713532525090,
                             "3": "PHT"
+                        },
+                        {
+                            "0": 25,
+                            "1": "/",
+                            "2": 1713541587444,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 26,
+                            "1": "/",
+                            "2": 1713541590863,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 27,
+                            "1": "/",
+                            "2": 1713541594427,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 28,
+                            "1": "/",
+                            "2": 1713541628404,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 29,
+                            "1": "/",
+                            "2": 1713541634469,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 30,
+                            "1": "/",
+                            "2": 1713541635841,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 31,
+                            "1": "/",
+                            "2": 1713542011446,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 32,
+                            "1": "/",
+                            "2": 1713598234419,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 33,
+                            "1": "/",
+                            "2": 1713598239650,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 34,
+                            "1": "/",
+                            "2": 1713598243166,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 35,
+                            "1": "/",
+                            "2": 1713598245328,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 36,
+                            "1": "/",
+                            "2": 1713689907043,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 37,
+                            "1": "/",
+                            "2": 1713689942829,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 38,
+                            "1": "/",
+                            "2": 1713689946382,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 39,
+                            "1": "/",
+                            "2": 1713689947762,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 40,
+                            "1": "/",
+                            "2": 1713689961449,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 41,
+                            "1": "/",
+                            "2": 1713690653947,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 42,
+                            "1": "/",
+                            "2": 1713690719477,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 43,
+                            "1": "/",
+                            "2": 1713690722127,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 44,
+                            "1": "/",
+                            "2": 1713690728305,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 45,
+                            "1": "/",
+                            "2": 1713690746595,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 46,
+                            "1": "/",
+                            "2": 1713690747142,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 47,
+                            "1": "/",
+                            "2": 1713690749328,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 48,
+                            "1": "/",
+                            "2": 1713690794589,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 49,
+                            "1": "/",
+                            "2": 1713690798770,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 50,
+                            "1": "/",
+                            "2": 1713690804388,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 51,
+                            "1": "/",
+                            "2": 1713690806284,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 52,
+                            "1": "/",
+                            "2": 1713690807677,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 53,
+                            "1": "/",
+                            "2": 1713690850078,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 54,
+                            "1": "/",
+                            "2": 1713690851752,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 55,
+                            "1": "/",
+                            "2": 1713690910630,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 56,
+                            "1": "/",
+                            "2": 1713690913351,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 57,
+                            "1": "/",
+                            "2": 1713690913991,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 58,
+                            "1": "/",
+                            "2": 1713691195330,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 59,
+                            "1": "/",
+                            "2": 1713691196537,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 60,
+                            "1": "/",
+                            "2": 1713691220369,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 61,
+                            "1": "/",
+                            "2": 1713691233108,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 62,
+                            "1": "/",
+                            "2": 1713691808600,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 63,
+                            "1": "/",
+                            "2": 1713691855137,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 64,
+                            "1": "/",
+                            "2": 1713691880050,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 65,
+                            "1": "/",
+                            "2": 1713691880757,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 66,
+                            "1": "/",
+                            "2": 1713691895258,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 67,
+                            "1": "/",
+                            "2": 1713691901936,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 68,
+                            "1": "/",
+                            "2": 1713691904765,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 69,
+                            "1": "/",
+                            "2": 1713691923761,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 70,
+                            "1": "/",
+                            "2": 1713691978590,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 71,
+                            "1": "/",
+                            "2": 1713691979228,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 72,
+                            "1": "/",
+                            "2": 1713692044782,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 73,
+                            "1": "/",
+                            "2": 1713692049622,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 74,
+                            "1": "/",
+                            "2": 1713692091576,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 75,
+                            "1": "/",
+                            "2": 1713692726101,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 76,
+                            "1": "/",
+                            "2": 1713692766195,
+                            "3": "PHT"
                         }
                     ],
                     "columns": [
@@ -784,9 +1125,9 @@
                         }
                     ],
                     "executionInfo": {
-                        "text": "OK, 14 records retrieved in 0.621ms"
+                        "text": "OK, 66 records retrieved in 1.97ms"
                     },
-                    "totalRowCount": 14,
+                    "totalRowCount": 66,
                     "hasMoreRows": false,
                     "currentPage": 0,
                     "index": 1,
@@ -794,23 +1135,23 @@
                 },
                 {
                     "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "fea2ff8a-dbb2-4485-bc47-0d3cfff96d0a",
+                    "resultId": "e765ef80-f56f-43f8-e46d-7a6b1e4c4130",
                     "rows": [
                         {
                             "0": "F5",
-                            "1": 6
+                            "1": 19
                         },
                         {
                             "0": "Meta",
-                            "1": 2
+                            "1": 17
                         },
                         {
                             "0": "Control",
-                            "1": 5
+                            "1": 20
                         },
                         {
                             "0": "Shift",
-                            "1": 1
+                            "1": 7
                         },
                         {
                             "0": "s",
@@ -823,6 +1164,10 @@
                         {
                             "0": "d",
                             "1": 2
+                        },
+                        {
+                            "0": "Alt",
+                            "1": 6
                         }
                     ],
                     "columns": [
@@ -842,13 +1187,771 @@
                         }
                     ],
                     "executionInfo": {
-                        "text": "OK, 7 records retrieved in 1.022ms"
+                        "text": "OK, 8 records retrieved in 1.299ms"
                     },
-                    "totalRowCount": 7,
+                    "totalRowCount": 8,
                     "hasMoreRows": false,
                     "currentPage": 0,
                     "index": 2,
                     "sql": " SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button"
+                },
+                {
+                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
+                    "resultId": "63a272cc-4c64-4818-8ce2-4e554a2ae5d1",
+                    "rows": [
+                        {
+                            "0": 63,
+                            "1": 20,
+                            "2": 8
+                        },
+                        {
+                            "0": 39,
+                            "1": 0,
+                            "2": 7
+                        },
+                        {
+                            "0": 38,
+                            "1": 7,
+                            "2": 6
+                        },
+                        {
+                            "0": 49,
+                            "1": 24,
+                            "2": 6
+                        },
+                        {
+                            "0": 40,
+                            "1": 33,
+                            "2": 6
+                        },
+                        {
+                            "0": 267,
+                            "1": 140,
+                            "2": 5
+                        },
+                        {
+                            "0": 277,
+                            "1": 219,
+                            "2": 5
+                        },
+                        {
+                            "0": 179,
+                            "1": 191,
+                            "2": 5
+                        },
+                        {
+                            "0": 607,
+                            "1": 296,
+                            "2": 5
+                        },
+                        {
+                            "0": 633,
+                            "1": 151,
+                            "2": 5
+                        },
+                        {
+                            "0": 33,
+                            "1": 20,
+                            "2": 5
+                        },
+                        {
+                            "0": 52,
+                            "1": 90,
+                            "2": 5
+                        },
+                        {
+                            "0": 378,
+                            "1": 52,
+                            "2": 5
+                        },
+                        {
+                            "0": 108,
+                            "1": 103,
+                            "2": 5
+                        },
+                        {
+                            "0": 61,
+                            "1": 81,
+                            "2": 5
+                        },
+                        {
+                            "0": 337,
+                            "1": 113,
+                            "2": 5
+                        },
+                        {
+                            "0": 58,
+                            "1": 228,
+                            "2": 5
+                        },
+                        {
+                            "0": 94,
+                            "1": 255,
+                            "2": 5
+                        },
+                        {
+                            "0": 35,
+                            "1": 207,
+                            "2": 5
+                        },
+                        {
+                            "0": 431,
+                            "1": 226,
+                            "2": 5
+                        },
+                        {
+                            "0": 363,
+                            "1": 208,
+                            "2": 5
+                        },
+                        {
+                            "0": 99,
+                            "1": 91,
+                            "2": 5
+                        },
+                        {
+                            "0": 440,
+                            "1": 20,
+                            "2": 5
+                        },
+                        {
+                            "0": 455,
+                            "1": 107,
+                            "2": 5
+                        },
+                        {
+                            "0": 94,
+                            "1": 83,
+                            "2": 5
+                        },
+                        {
+                            "0": 887,
+                            "1": 417,
+                            "2": 5
+                        },
+                        {
+                            "0": 225,
+                            "1": 111,
+                            "2": 5
+                        },
+                        {
+                            "0": 437,
+                            "1": 129,
+                            "2": 5
+                        },
+                        {
+                            "0": 19,
+                            "1": 211,
+                            "2": 5
+                        },
+                        {
+                            "0": 249,
+                            "1": 106,
+                            "2": 5
+                        },
+                        {
+                            "0": 31,
+                            "1": 214,
+                            "2": 5
+                        },
+                        {
+                            "0": 50,
+                            "1": 224,
+                            "2": 5
+                        },
+                        {
+                            "0": 304,
+                            "1": 89,
+                            "2": 5
+                        },
+                        {
+                            "0": 571,
+                            "1": 155,
+                            "2": 5
+                        },
+                        {
+                            "0": 8,
+                            "1": 196,
+                            "2": 5
+                        },
+                        {
+                            "0": 281,
+                            "1": 232,
+                            "2": 5
+                        },
+                        {
+                            "0": 271,
+                            "1": 190,
+                            "2": 5
+                        },
+                        {
+                            "0": 161,
+                            "1": 179,
+                            "2": 5
+                        },
+                        {
+                            "0": 596,
+                            "1": 291,
+                            "2": 5
+                        },
+                        {
+                            "0": 507,
+                            "1": 254,
+                            "2": 5
+                        },
+                        {
+                            "0": 198,
+                            "1": 190,
+                            "2": 5
+                        },
+                        {
+                            "0": 150,
+                            "1": 169,
+                            "2": 5
+                        },
+                        {
+                            "0": 435,
+                            "1": 110,
+                            "2": 5
+                        },
+                        {
+                            "0": 335,
+                            "1": 80,
+                            "2": 5
+                        },
+                        {
+                            "0": 400,
+                            "1": 36,
+                            "2": 5
+                        },
+                        {
+                            "0": 417,
+                            "1": 30,
+                            "2": 5
+                        },
+                        {
+                            "0": 65,
+                            "1": 20,
+                            "2": 5
+                        },
+                        {
+                            "0": 51,
+                            "1": 36,
+                            "2": 5
+                        },
+                        {
+                            "0": 41,
+                            "1": 30,
+                            "2": 5
+                        },
+                        {
+                            "0": 85,
+                            "1": 21,
+                            "2": 5
+                        },
+                        {
+                            "0": 91,
+                            "1": 11,
+                            "2": 5
+                        },
+                        {
+                            "0": 33,
+                            "1": 137,
+                            "2": 5
+                        },
+                        {
+                            "0": 29,
+                            "1": 27,
+                            "2": 5
+                        },
+                        {
+                            "0": 157,
+                            "1": 5,
+                            "2": 5
+                        },
+                        {
+                            "0": 103,
+                            "1": 77,
+                            "2": 5
+                        },
+                        {
+                            "0": 83,
+                            "1": 245,
+                            "2": 5
+                        },
+                        {
+                            "0": 106,
+                            "1": 269,
+                            "2": 5
+                        },
+                        {
+                            "0": 36,
+                            "1": 13,
+                            "2": 5
+                        },
+                        {
+                            "0": 64,
+                            "1": 231,
+                            "2": 5
+                        },
+                        {
+                            "0": 21,
+                            "1": 208,
+                            "2": 5
+                        },
+                        {
+                            "0": 37,
+                            "1": 218,
+                            "2": 5
+                        },
+                        {
+                            "0": 74,
+                            "1": 238,
+                            "2": 5
+                        },
+                        {
+                            "0": 277,
+                            "1": 99,
+                            "2": 5
+                        },
+                        {
+                            "0": 56,
+                            "1": 10,
+                            "2": 5
+                        },
+                        {
+                            "0": 613,
+                            "1": 303,
+                            "2": 5
+                        },
+                        {
+                            "0": 903,
+                            "1": 371,
+                            "2": 5
+                        },
+                        {
+                            "0": 899,
+                            "1": 386,
+                            "2": 5
+                        },
+                        {
+                            "0": 573,
+                            "1": 276,
+                            "2": 5
+                        },
+                        {
+                            "0": 22,
+                            "1": 117,
+                            "2": 5
+                        },
+                        {
+                            "0": 216,
+                            "1": 184,
+                            "2": 5
+                        },
+                        {
+                            "0": 235,
+                            "1": 184,
+                            "2": 5
+                        },
+                        {
+                            "0": 23,
+                            "1": 31,
+                            "2": 5
+                        },
+                        {
+                            "0": 225,
+                            "1": 184,
+                            "2": 5
+                        },
+                        {
+                            "0": 155,
+                            "1": 175,
+                            "2": 5
+                        },
+                        {
+                            "0": 893,
+                            "1": 407,
+                            "2": 5
+                        },
+                        {
+                            "0": 207,
+                            "1": 186,
+                            "2": 5
+                        },
+                        {
+                            "0": 876,
+                            "1": 441,
+                            "2": 5
+                        },
+                        {
+                            "0": 12,
+                            "1": 129,
+                            "2": 5
+                        },
+                        {
+                            "0": 75,
+                            "1": 34,
+                            "2": 5
+                        },
+                        {
+                            "0": 118,
+                            "1": 119,
+                            "2": 5
+                        },
+                        {
+                            "0": 69,
+                            "1": 26,
+                            "2": 5
+                        },
+                        {
+                            "0": 48,
+                            "1": 3,
+                            "2": 5
+                        },
+                        {
+                            "0": 41,
+                            "1": 36,
+                            "2": 5
+                        },
+                        {
+                            "0": 57,
+                            "1": 11,
+                            "2": 5
+                        },
+                        {
+                            "0": 140,
+                            "1": 151,
+                            "2": 5
+                        },
+                        {
+                            "0": 402,
+                            "1": 3,
+                            "2": 5
+                        },
+                        {
+                            "0": 432,
+                            "1": 23,
+                            "2": 5
+                        },
+                        {
+                            "0": 376,
+                            "1": 15,
+                            "2": 5
+                        },
+                        {
+                            "0": 220,
+                            "1": 144,
+                            "2": 5
+                        },
+                        {
+                            "0": 357,
+                            "1": 65,
+                            "2": 5
+                        },
+                        {
+                            "0": 308,
+                            "1": 143,
+                            "2": 5
+                        },
+                        {
+                            "0": 426,
+                            "1": 27,
+                            "2": 5
+                        },
+                        {
+                            "0": 169,
+                            "1": 186,
+                            "2": 5
+                        },
+                        {
+                            "0": 18,
+                            "1": 16,
+                            "2": 5
+                        },
+                        {
+                            "0": 177,
+                            "1": 91,
+                            "2": 5
+                        },
+                        {
+                            "0": 251,
+                            "1": 103,
+                            "2": 5
+                        },
+                        {
+                            "0": 58,
+                            "1": 3,
+                            "2": 5
+                        },
+                        {
+                            "0": 245,
+                            "1": 136,
+                            "2": 5
+                        },
+                        {
+                            "0": 143,
+                            "1": 3,
+                            "2": 5
+                        },
+                        {
+                            "0": 283,
+                            "1": 209,
+                            "2": 5
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "x_position",
+                            "field": "0",
+                            "dataType": {
+                                "type": 2
+                            }
+                        },
+                        {
+                            "title": "y_position",
+                            "field": "1",
+                            "dataType": {
+                                "type": 2
+                            }
+                        },
+                        {
+                            "title": "frequency",
+                            "field": "2",
+                            "dataType": {
+                                "type": 4
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 100 records retrieved in 4.654ms"
+                    },
+                    "totalRowCount": 100,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 3,
+                    "sql": " SELECT x_position, y_position, COUNT(id) AS frequency FROM mouse_inputs GROUP BY x_position, y_position ORDER BY frequency DESC LIMIT 100"
+                },
+                {
+                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
+                    "resultId": "c1b62ff8-b52c-4678-90a0-33a24a0417fd",
+                    "rows": [
+                        {
+                            "0": 11
+                        },
+                        {
+                            "0": 12
+                        },
+                        {
+                            "0": 13
+                        },
+                        {
+                            "0": 14
+                        },
+                        {
+                            "0": 15
+                        },
+                        {
+                            "0": 16
+                        },
+                        {
+                            "0": 17
+                        },
+                        {
+                            "0": 18
+                        },
+                        {
+                            "0": 19
+                        },
+                        {
+                            "0": 20
+                        },
+                        {
+                            "0": 21
+                        },
+                        {
+                            "0": 22
+                        },
+                        {
+                            "0": 23
+                        },
+                        {
+                            "0": 24
+                        },
+                        {
+                            "0": 25
+                        },
+                        {
+                            "0": 26
+                        },
+                        {
+                            "0": 27
+                        },
+                        {
+                            "0": 28
+                        },
+                        {
+                            "0": 29
+                        },
+                        {
+                            "0": 30
+                        },
+                        {
+                            "0": 31
+                        },
+                        {
+                            "0": 32
+                        },
+                        {
+                            "0": 33
+                        },
+                        {
+                            "0": 34
+                        },
+                        {
+                            "0": 35
+                        },
+                        {
+                            "0": 36
+                        },
+                        {
+                            "0": 37
+                        },
+                        {
+                            "0": 38
+                        },
+                        {
+                            "0": 39
+                        },
+                        {
+                            "0": 40
+                        },
+                        {
+                            "0": 41
+                        },
+                        {
+                            "0": 42
+                        },
+                        {
+                            "0": 43
+                        },
+                        {
+                            "0": 44
+                        },
+                        {
+                            "0": 45
+                        },
+                        {
+                            "0": 46
+                        },
+                        {
+                            "0": 47
+                        },
+                        {
+                            "0": 48
+                        },
+                        {
+                            "0": 49
+                        },
+                        {
+                            "0": 50
+                        },
+                        {
+                            "0": 51
+                        },
+                        {
+                            "0": 52
+                        },
+                        {
+                            "0": 53
+                        },
+                        {
+                            "0": 54
+                        },
+                        {
+                            "0": 55
+                        },
+                        {
+                            "0": 56
+                        },
+                        {
+                            "0": 57
+                        },
+                        {
+                            "0": 58
+                        },
+                        {
+                            "0": 59
+                        },
+                        {
+                            "0": 60
+                        },
+                        {
+                            "0": 61
+                        },
+                        {
+                            "0": 62
+                        },
+                        {
+                            "0": 63
+                        },
+                        {
+                            "0": 64
+                        },
+                        {
+                            "0": 65
+                        },
+                        {
+                            "0": 66
+                        },
+                        {
+                            "0": 67
+                        },
+                        {
+                            "0": 68
+                        },
+                        {
+                            "0": 69
+                        },
+                        {
+                            "0": 70
+                        },
+                        {
+                            "0": 71
+                        },
+                        {
+                            "0": 72
+                        },
+                        {
+                            "0": 73
+                        },
+                        {
+                            "0": 74
+                        },
+                        {
+                            "0": 75
+                        },
+                        {
+                            "0": 76
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "id",
+                            "field": "0",
+                            "dataType": {
+                                "type": 4
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 66 records retrieved in 0.796ms"
+                    },
+                    "totalRowCount": 66,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 4,
+                    "sql": " SELECT id FROM inputs"
                 }
             ]
         },
@@ -1777,7 +2880,7 @@
                         "98fe13c5-8e0f-4818-9ab2-4aa258a11fb9"
                     ]
                 },
-                "currentHeight": 352,
+                "currentHeight": 36,
                 "statements": [
                     {
                         "delimiter": ";",
@@ -1822,23 +2925,32 @@
         {
             "state": {
                 "start": 54,
-                "end": 56,
+                "end": 57,
                 "language": "mysql",
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "b31820c8-ef51-4fbf-d06b-671f98a573f5"
+                        "b1b56ffb-4437-418c-9af2-53e755b9336a"
                     ]
                 },
-                "currentHeight": 352,
+                "currentHeight": 36,
                 "statements": [
                     {
                         "delimiter": ";",
                         "span": {
                             "start": 0,
-                            "length": 74
+                            "length": 161
                         },
                         "contentStart": 0,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 161,
+                            "length": 0
+                        },
+                        "contentStart": 160,
                         "state": 3
                     }
                 ]
@@ -1846,217 +2958,217 @@
             "data": [
                 {
                     "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "b31820c8-ef51-4fbf-d06b-671f98a573f5",
+                    "resultId": "b1b56ffb-4437-418c-9af2-53e755b9336a",
                     "rows": [
                         {
-                            "0": 898,
-                            "1": 472,
-                            "2": 1713532514182
-                        },
-                        {
-                            "0": 911,
-                            "1": 464,
-                            "2": 1713532514187
-                        },
-                        {
-                            "0": 923,
-                            "1": 454,
-                            "2": 1713532514202
-                        },
-                        {
-                            "0": 931,
-                            "1": 434,
-                            "2": 1713532514216
-                        },
-                        {
-                            "0": 939,
-                            "1": 413,
-                            "2": 1713532514229
-                        },
-                        {
-                            "0": 960,
-                            "1": 381,
-                            "2": 1713532514240
-                        },
-                        {
-                            "0": 974,
-                            "1": 363,
-                            "2": 1713532514256
-                        },
-                        {
-                            "0": 35,
-                            "1": 288,
-                            "2": 1713532514267
-                        },
-                        {
-                            "0": 33,
-                            "1": 54,
-                            "2": 1713532514281
-                        },
-                        {
-                            "0": 41,
-                            "1": 38,
-                            "2": 1713532514293
-                        },
-                        {
-                            "0": 50,
-                            "1": 21,
-                            "2": 1713532514305
-                        },
-                        {
-                            "0": 63,
-                            "1": 8,
-                            "2": 1713532514317
-                        },
-                        {
-                            "0": 84,
-                            "1": 214,
-                            "2": 1713532514330
-                        },
-                        {
-                            "0": 92,
-                            "1": 206,
-                            "2": 1713532514343
-                        },
-                        {
-                            "0": 98,
-                            "1": 202,
-                            "2": 1713532514356
-                        },
-                        {
-                            "0": 57,
-                            "1": 22,
-                            "2": 1713532514369
-                        },
-                        {
-                            "0": 63,
-                            "1": 18,
-                            "2": 1713532514383
-                        },
-                        {
-                            "0": 75,
-                            "1": 16,
-                            "2": 1713532514395
-                        },
-                        {
-                            "0": 83,
-                            "1": 14,
-                            "2": 1713532514408
-                        },
-                        {
-                            "0": 93,
-                            "1": 11,
-                            "2": 1713532514417
-                        },
-                        {
-                            "0": 105,
-                            "1": 7,
-                            "2": 1713532514429
-                        },
-                        {
-                            "0": 117,
-                            "1": 3,
-                            "2": 1713532514442
-                        },
-                        {
-                            "0": 134,
-                            "1": 23,
-                            "2": 1713532514456
-                        },
-                        {
-                            "0": 159,
-                            "1": 17,
-                            "2": 1713532514468
-                        },
-                        {
-                            "0": 194,
-                            "1": 9,
-                            "2": 1713532514481
-                        },
-                        {
-                            "0": 229,
-                            "1": 3,
-                            "2": 1713532514493
-                        },
-                        {
-                            "0": 300,
-                            "1": 151,
-                            "2": 1713532514505
-                        },
-                        {
-                            "0": 322,
-                            "1": 147,
-                            "2": 1713532514518
-                        },
-                        {
-                            "0": 336,
-                            "1": 143,
-                            "2": 1713532514532
-                        },
-                        {
-                            "0": 352,
-                            "1": 138,
-                            "2": 1713532514545
-                        },
-                        {
-                            "0": 352,
-                            "1": 18,
-                            "2": 1713532514557
-                        },
-                        {
-                            "0": 368,
-                            "1": 13,
-                            "2": 1713532514838
-                        },
-                        {
-                            "0": 388,
-                            "1": 4,
-                            "2": 1713532514850
-                        },
-                        {
-                            "0": 429,
-                            "1": 100,
-                            "2": 1713532514863
-                        },
-                        {
-                            "0": 444,
-                            "1": 85,
-                            "2": 1713532514877
-                        },
-                        {
-                            "0": 472,
-                            "1": 53,
-                            "2": 1713532514891
-                        },
-                        {
-                            "0": 495,
-                            "1": 27,
-                            "2": 1713532514902
-                        },
-                        {
-                            "0": 513,
-                            "1": 5,
-                            "2": 1713532514915
-                        },
-                        {
-                            "0": 1199,
-                            "1": 43,
-                            "2": 1713532514930
-                        },
-                        {
-                            "0": 1209,
-                            "1": 24,
-                            "2": 1713532514942
+                            "0": 1219,
+                            "1": 6,
+                            "2": 0
                         },
                         {
                             "0": 1215,
                             "1": 14,
-                            "2": 1713532514954
+                            "2": 13
                         },
                         {
-                            "0": 1219,
-                            "1": 6,
-                            "2": 1713532514967
+                            "0": 1209,
+                            "1": 24,
+                            "2": 25
+                        },
+                        {
+                            "0": 1199,
+                            "1": 43,
+                            "2": 37
+                        },
+                        {
+                            "0": 513,
+                            "1": 5,
+                            "2": 52
+                        },
+                        {
+                            "0": 495,
+                            "1": 27,
+                            "2": 65
+                        },
+                        {
+                            "0": 472,
+                            "1": 53,
+                            "2": 76
+                        },
+                        {
+                            "0": 444,
+                            "1": 85,
+                            "2": 90
+                        },
+                        {
+                            "0": 429,
+                            "1": 100,
+                            "2": 104
+                        },
+                        {
+                            "0": 388,
+                            "1": 4,
+                            "2": 117
+                        },
+                        {
+                            "0": 368,
+                            "1": 13,
+                            "2": 129
+                        },
+                        {
+                            "0": 352,
+                            "1": 18,
+                            "2": 410
+                        },
+                        {
+                            "0": 352,
+                            "1": 138,
+                            "2": 422
+                        },
+                        {
+                            "0": 336,
+                            "1": 143,
+                            "2": 435
+                        },
+                        {
+                            "0": 322,
+                            "1": 147,
+                            "2": 449
+                        },
+                        {
+                            "0": 300,
+                            "1": 151,
+                            "2": 462
+                        },
+                        {
+                            "0": 229,
+                            "1": 3,
+                            "2": 474
+                        },
+                        {
+                            "0": 194,
+                            "1": 9,
+                            "2": 486
+                        },
+                        {
+                            "0": 159,
+                            "1": 17,
+                            "2": 499
+                        },
+                        {
+                            "0": 134,
+                            "1": 23,
+                            "2": 511
+                        },
+                        {
+                            "0": 117,
+                            "1": 3,
+                            "2": 525
+                        },
+                        {
+                            "0": 105,
+                            "1": 7,
+                            "2": 538
+                        },
+                        {
+                            "0": 93,
+                            "1": 11,
+                            "2": 550
+                        },
+                        {
+                            "0": 83,
+                            "1": 14,
+                            "2": 559
+                        },
+                        {
+                            "0": 75,
+                            "1": 16,
+                            "2": 572
+                        },
+                        {
+                            "0": 63,
+                            "1": 18,
+                            "2": 584
+                        },
+                        {
+                            "0": 57,
+                            "1": 22,
+                            "2": 598
+                        },
+                        {
+                            "0": 98,
+                            "1": 202,
+                            "2": 611
+                        },
+                        {
+                            "0": 92,
+                            "1": 206,
+                            "2": 624
+                        },
+                        {
+                            "0": 84,
+                            "1": 214,
+                            "2": 637
+                        },
+                        {
+                            "0": 63,
+                            "1": 8,
+                            "2": 650
+                        },
+                        {
+                            "0": 50,
+                            "1": 21,
+                            "2": 662
+                        },
+                        {
+                            "0": 41,
+                            "1": 38,
+                            "2": 674
+                        },
+                        {
+                            "0": 33,
+                            "1": 54,
+                            "2": 686
+                        },
+                        {
+                            "0": 35,
+                            "1": 288,
+                            "2": 700
+                        },
+                        {
+                            "0": 974,
+                            "1": 363,
+                            "2": 711
+                        },
+                        {
+                            "0": 960,
+                            "1": 381,
+                            "2": 727
+                        },
+                        {
+                            "0": 939,
+                            "1": 413,
+                            "2": 738
+                        },
+                        {
+                            "0": 931,
+                            "1": 434,
+                            "2": 751
+                        },
+                        {
+                            "0": 923,
+                            "1": 454,
+                            "2": 765
+                        },
+                        {
+                            "0": 911,
+                            "1": 464,
+                            "2": 780
+                        },
+                        {
+                            "0": 898,
+                            "1": 472,
+                            "2": 785
                         }
                     ],
                     "columns": [
@@ -2075,42 +3187,42 @@
                             }
                         },
                         {
-                            "title": "utime",
+                            "title": "millis",
                             "field": "2",
                             "dataType": {
-                                "type": 5
+                                "type": 4
                             }
                         }
                     ],
                     "executionInfo": {
-                        "text": "OK, 42 records retrieved in 2.874ms"
+                        "text": "OK, 42 records retrieved in 1.077ms"
                     },
                     "totalRowCount": 42,
                     "hasMoreRows": false,
                     "currentPage": 0,
                     "index": 0,
-                    "sql": "SELECT x_position, y_position, utime\nFROM mouse_inputs\nWHERE input_id = 22"
+                    "sql": "SELECT x_position, y_position, (SELECT MAX(utime) FROM mouse_inputs WHERE input_id = 22) - utime AS millis\nFROM mouse_inputs\nWHERE input_id = 22\nORDER BY millis"
                 }
             ]
         },
         {
             "state": {
-                "start": 57,
-                "end": 59,
+                "start": 58,
+                "end": 60,
                 "language": "mysql",
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "2a272bfc-1be1-4b75-9369-9df30267d98c"
+                        "12afaa6f-e20e-4dbd-aebb-63f7c42ec345"
                     ]
                 },
-                "currentHeight": 91.09375,
+                "currentHeight": 36,
                 "statements": [
                     {
                         "delimiter": ";",
                         "span": {
                             "start": 0,
-                            "length": 94
+                            "length": 108
                         },
                         "contentStart": 0,
                         "state": 3
@@ -2120,7 +3232,7 @@
             "data": [
                 {
                     "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "2a272bfc-1be1-4b75-9369-9df30267d98c",
+                    "resultId": "12afaa6f-e20e-4dbd-aebb-63f7c42ec345",
                     "rows": [
                         {
                             "0": 785
@@ -2128,7 +3240,7 @@
                     ],
                     "columns": [
                         {
-                            "title": "MAX(mouse_inputs.utime) - MIN(mouse_inputs.utime)",
+                            "title": "timeOnPage",
                             "field": "0",
                             "dataType": {
                                 "type": 4
@@ -2136,20 +3248,268 @@
                         }
                     ],
                     "executionInfo": {
-                        "text": "OK, 1 record retrieved in 1.213ms"
+                        "text": "OK, 1 record retrieved in 3.006ms"
                     },
                     "totalRowCount": 1,
                     "hasMoreRows": false,
                     "currentPage": 0,
                     "index": 0,
-                    "sql": "SELECT MAX(mouse_inputs.utime) - MIN(mouse_inputs.utime)\nFROM mouse_inputs\nWHERE input_id = 22"
+                    "sql": "SELECT MAX(mouse_inputs.utime) - MIN(mouse_inputs.utime) as timeOnPage\nFROM mouse_inputs\nWHERE input_id = 22"
                 }
             ]
         },
         {
             "state": {
-                "start": 60,
-                "end": 60,
+                "start": 61,
+                "end": 61,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "9f6cfb05-94bd-4306-a13a-d76cfdc93b9a"
+                    ]
+                },
+                "currentHeight": 36,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 22
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
+                    "resultId": "9f6cfb05-94bd-4306-a13a-d76cfdc93b9a",
+                    "rows": [
+                        {
+                            "0": 11
+                        },
+                        {
+                            "0": 12
+                        },
+                        {
+                            "0": 13
+                        },
+                        {
+                            "0": 14
+                        },
+                        {
+                            "0": 15
+                        },
+                        {
+                            "0": 16
+                        },
+                        {
+                            "0": 17
+                        },
+                        {
+                            "0": 18
+                        },
+                        {
+                            "0": 19
+                        },
+                        {
+                            "0": 20
+                        },
+                        {
+                            "0": 21
+                        },
+                        {
+                            "0": 22
+                        },
+                        {
+                            "0": 23
+                        },
+                        {
+                            "0": 24
+                        },
+                        {
+                            "0": 25
+                        },
+                        {
+                            "0": 26
+                        },
+                        {
+                            "0": 27
+                        },
+                        {
+                            "0": 28
+                        },
+                        {
+                            "0": 29
+                        },
+                        {
+                            "0": 30
+                        },
+                        {
+                            "0": 31
+                        },
+                        {
+                            "0": 32
+                        },
+                        {
+                            "0": 33
+                        },
+                        {
+                            "0": 34
+                        },
+                        {
+                            "0": 35
+                        },
+                        {
+                            "0": 36
+                        },
+                        {
+                            "0": 37
+                        },
+                        {
+                            "0": 38
+                        },
+                        {
+                            "0": 39
+                        },
+                        {
+                            "0": 40
+                        },
+                        {
+                            "0": 41
+                        },
+                        {
+                            "0": 42
+                        },
+                        {
+                            "0": 43
+                        },
+                        {
+                            "0": 44
+                        },
+                        {
+                            "0": 45
+                        },
+                        {
+                            "0": 46
+                        },
+                        {
+                            "0": 47
+                        },
+                        {
+                            "0": 48
+                        },
+                        {
+                            "0": 49
+                        },
+                        {
+                            "0": 50
+                        },
+                        {
+                            "0": 51
+                        },
+                        {
+                            "0": 52
+                        },
+                        {
+                            "0": 53
+                        },
+                        {
+                            "0": 54
+                        },
+                        {
+                            "0": 55
+                        },
+                        {
+                            "0": 56
+                        },
+                        {
+                            "0": 57
+                        },
+                        {
+                            "0": 58
+                        },
+                        {
+                            "0": 59
+                        },
+                        {
+                            "0": 60
+                        },
+                        {
+                            "0": 61
+                        },
+                        {
+                            "0": 62
+                        },
+                        {
+                            "0": 63
+                        },
+                        {
+                            "0": 64
+                        },
+                        {
+                            "0": 65
+                        },
+                        {
+                            "0": 66
+                        },
+                        {
+                            "0": 67
+                        },
+                        {
+                            "0": 68
+                        },
+                        {
+                            "0": 69
+                        },
+                        {
+                            "0": 70
+                        },
+                        {
+                            "0": 71
+                        },
+                        {
+                            "0": 72
+                        },
+                        {
+                            "0": 73
+                        },
+                        {
+                            "0": 74
+                        },
+                        {
+                            "0": 75
+                        },
+                        {
+                            "0": 76
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "id",
+                            "field": "0",
+                            "dataType": {
+                                "type": 4
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 66 records retrieved in 4.061ms"
+                    },
+                    "totalRowCount": 66,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "SELECT id FROM inputs"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 62,
+                "end": 62,
                 "language": "mysql",
                 "currentHeight": 180,
                 "statements": [

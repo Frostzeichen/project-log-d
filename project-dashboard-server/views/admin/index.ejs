@@ -17,6 +17,8 @@
         <div style="width: 600px; height: 600px;">
             <canvas id="bubble-chart" width="800" height="400"></canvas>
         </div>
+        <h2>View Mouse Replay</h2>
+        <div id="mouseReplaySessionList"></div>
         <h2>List of all Page Visits</h2>
         <table>
             <thead>
@@ -81,7 +83,7 @@
                 { // List of all Page Visits
                     let pageViews = "";
                     data[1].forEach((item) => {
-                        pageViews += `<tr><td>${item.id}</td><td>${item.route}</td><td>${new Date(item.utime)}</td><td>${item.timezone}</td></tr>`
+                        pageViews += `<tr><td><a href="/replays/${item.id}">${item.id}</a></td><td>${item.route}</td><td>${new Date(item.utime)}</td><td>${item.timezone}</td></tr>`
                     });
                     document.querySelector("#pageViews").innerHTML = pageViews;
                 }
@@ -173,7 +175,6 @@
                             }
                         }
                     });
-
                 }
             });
         </script>
