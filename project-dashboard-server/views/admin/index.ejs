@@ -2,38 +2,73 @@
 <html>
     <head>
         <title>Log.d Project Dashboard</title>
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/normalize.css@8.0.1/normalize.css">
+        <link rel="stylesheet" type="text/css" href="/styles.css">
         <script type="text/javascript" src="/socket.io/socket.io.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
         <script type="module" src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     </head>
     <body>
         <h1>Log.d Project Dashboard (Metrics)</h1>
-        <div style="width: 600px; height: 600px;">
-            <canvas id="dailyVisits" width="800" height="450"></canvas>
-        </div>
-        <div style="width: 600px; height: 600px;">
-            <canvas id="keyFrequencies" width="800" height="450"></canvas>
-        </div>
-        <div style="width: 600px; height: 600px;">
-            <canvas id="bubble-chart" width="800" height="400"></canvas>
-        </div>
-        <h2>View Mouse Replay</h2>
-        <div id="mouseReplaySessionList"></div>
-        <h2>List of all Page Visits</h2>
-        <table>
-            <thead>
-                <th>ID</th>
-                <th>ROUTE</th>
-                <th>TIME</th>
-                <th>COUNTRY</th>
-            </thead>
-            <tbody id="pageViews">
-            </tbody>
-        </table>
+        <nav>
+            <button onclick="load('documentationWebsiteVisitorsChart')">Documentation Website Visitors</button>
+            <button onclick="load('keyFrequenciesChart')">Key Frequencies</button>
+            <button onclick="load('mostFrequentMouseSpotsChart')">Most Frequent Mouse Spots</button>
+            <button onclick="load('allPageVisitorsChart')">List of all Page Visits</button>
+            <button onclick="showAll()">Show all Charts</button>
+        </nav>
+        <main>
+            <p id="instructionsChart" class="hideOnChartLoad">Please select a view.</p>
+            <div id="documentationWebsiteVisitorsChart" style="width: 600px; height: 600px;" class="hideOnChartLoad">
+                <h2>Documentation Website Visitors</h2>
+                <canvas id="dailyVisits" width="800" height="450"></canvas>
+            </div>
+            <div id="keyFrequenciesChart" style="width: 600px; height: 600px;" class="hideOnChartLoad">
+                <h2>Key Frequencies</h2>
+                <canvas id="keyFrequencies" width="800" height="450"></canvas>
+            </div>
+            <div id="mostFrequentMouseSpotsChart" style="width: 600px; height: 350px; background-color: white;" class="hideOnChartLoad">
+                <h2>Most Frequent Mouse Spots</h2>
+                <canvas id="bubble-chart" width="800" height="400"></canvas>
+            </div>
+            <div id="allPageVisitorsChart" class="hideOnChartLoad">
+                <h2>List of all Page Visits</h2>
+                <table id="allPageVisitsTable">
+                    <thead>
+                        <th>ID</th>
+                        <th>ROUTE</th>
+                        <th>TIME</th>
+                        <th>COUNTRY</th>
+                    </thead>
+                    <tbody id="pageViews">
+                    </tbody>
+                </table>
+            </div>
+        </main>
+        <footer>Created by Terenz Jomar B. Dela Cruz. &copy; 2024. All Rights Reserved</footer>
         <script>
+            const load = (id) => {
+                const charts = document.querySelectorAll(".hideOnChartLoad")
+                charts.forEach(chart => {
+                    chart.style.display = "none";
+                });
+                document.querySelector(`#${id}`).style.display = "block";
+                document.querySelector("footer").style.position = "absolute";
+            }
+
+            const showAll = () => {
+                const charts = document.querySelectorAll(".hideOnChartLoad")
+                charts.forEach(chart => {
+                    chart.style.display = "block";
+                });
+                charts[0].style.display = "none";
+                document.querySelector("footer").style.position = "relative";
+            }
+
+            load("instructionsChart");
+
             const socket = io();
             socket.on("logd", (data) => {
-                console.log(data[0])
                 // WARNING: These charts will keep piling as the dataset increases.
                 // TODO: Fix the above warning.
                 { // Site Visit Histogram
@@ -52,9 +87,7 @@
                                 {
                                     label: "Number of visits at the documentation website",
                                     backgroundColor: "#3e95cd",
-                                    data: visitorsDataset,
-                                    min: 0,
-                                    max: 10
+                                    data: visitorsDataset
                                 }
                             ]
                         },
@@ -71,7 +104,6 @@
                                         beginAtZero: true,
                                         steps: 10,
                                         stepValue: 5,
-                                        max: 10,
                                         min: 0
                                     }
                                 }]
@@ -123,7 +155,6 @@
                                         beginAtZero: true,
                                         steps: 10,
                                         stepValue: 5,
-                                        max: 10,
                                         min: 0
                                     }
                                 }]
