@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Log.d Documentation Page</title>
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/normalize.css@8.0.1/normalize.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.esm.min.mjs"></script>
+    </head>
+    <body>
+        <div class="container">
+            <header class="row">
+                <h1>About Project Log.d</h1>
+            </header>
+            <section class="row">
+                <nav class="col col-4">
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="btn btn-secondary w-75">About Project Log.d</a></li>
+                        <li><a href="/logd/download/logd.zip" target="_blank" class="btn btn-success w-75">Download</a></li>
+                        <li><h3>Documentation</h3></li>
+                        <li><a href="/docs/project-architecture" class="btn btn-primary w-75">Project Architecture</a></li>
+                        <li><a href="/docs/data-transfer-mechanism" class="btn btn-primary w-75">Data Transfer Mechanism</a></li>
+                        <li><a href="/docs/schema" class="btn btn-primary w-75">Schema</a></li>
+                        <li><a href="/docs/notes-on-schema" class="btn btn-primary w-75">Notes on Schema</a></li>
+                        <li><a href="/docs/api" class="btn btn-primary w-75">API</a></li>
+                        <li><a href="https://github.com/Frostzeichen/project-log-d" class="btn btn-primary w-75">GitHub Repository</a></li>
+                        <li><a href="http://localhost:3001" class="btn btn-dark w-75">Project Dashboard Server</a></li>
+                    </ul>
+                </nav>
+                <main class="col">
+                    <h2>Notes on Schema</h2>
+                    <h3>On <code>inputs.utime</code> Using UNIX Time Instead of DATETIME</h2>
+                    <p>The choice between UNIX time and DATETIME comes as a choice between necessity. While DATETIME would have normally been ideal, the frontend already uses UNIX time to reduce computational overhead when storing mouse pixel values into memory especially when the user tries to use a 1px resolution.</p>
+                    <p>Furthermore, it is easier to compare UNIX on the project dashboard (comparing numbers by their sizes) than it is to compare dates which would need a reconversion from DATETIME to UNIX time behind the scenes. Unlike normal dates where choosing the month, day, or year works easily through string manipulation, this one works in millisecond intervals and, hence, a millisecond-based timekeeping method such as UNIX works better.</p>
+                    <h3>On <code>inputs.timezone</code></h2>
+                    <p>The reason why I added a timezone field is largely for analytical purposes. For users who would use the library in larger projects spanning across multiple time zones, there should be a way to record time zone data either through server (using a time zone-based server) or from the frontend (by checking the current device&#39;s time zone or network&#39;s country of origin).</p>
+                    <p>The time zone is stored as an <a href="https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations">abbreviated timezone</a> to also store data about the country of origin. This is a 5-character column to account for CHADT and CHAST (Chatham, New Zealand) and other 5-character abbreviations.</p>
+                    <p>An alternative would have been ISO 8601 style. However, it would take more space to store a timezone containing that (6 chars) while storing <em>no information</em> about the country of origin.</p>
+                    <h3>On the Length of <code>keyboard_inputs.button</code></h2>
+                    <p>The longest value I found from the <a href="https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values">MDN Docs on key values for the key event</a> seems to be the Linux dead key <code>GDK_KEY_dead_abovereversedcomma</code> (0xFE65) which is 31 characters long.</p>
+                    <h3>On <code>mouse_inputs.x_position</code> and <code>mouse_inputs.y_position</code></h2>
+                    <p>These are SMALLINT UNSIGNED because of the following reasons:</p>
+                    <ol>
+                        <li>Viewport starts at 0,0 with negative values unreachable to mouse event.</li>
+                        <li>TINYINT is too small (255) and I don&#39;t think commercial-grade 60K monitors are going to come out in the near future. Best we have right now is 16K using prototype and multi-monitor setups. See <a href="https://en.wikipedia.org/wiki/16K_resolution">Wikipedia</a>.</li>
+                    </ol>
+
+                </main>
+            </section>
+        </div>
+        <script src="/logd.js">
+        </script>
+    </body>
+</html>
