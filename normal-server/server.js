@@ -8,12 +8,14 @@ app.set("views", __dirname + "/views");
 app.use(express.json()); // Works without bodyparser.
 
 app.get("/", (req, res) => {
-    res.render("home/index.ejs");
+    res.render("docs/index.ejs");
 });
 
-app.get("/home", (req, res) => {
-    res.render("home/index.ejs");
+app.get("/docs", (req, res) => {
+    res.render("docs/index.ejs");
 });
+
+app.get("/docs")
 
 app.get("/favicon.ico", (req, res) => {
     res.sendFile(__dirname + "/views/assets/favicon.ico");
