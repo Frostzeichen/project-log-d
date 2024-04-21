@@ -2,7 +2,7 @@
     "type": "MySQLNotebook",
     "version": "1.0",
     "caption": "DB Notebook",
-    "content": "\\about\nCREATE DATABASE logd;\nUSE logd;\nCREATE TABLE inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    route VARCHAR(50), -- Adjust this if you plan to have a URL larger than 50 chars.\n    utime BIGINT SIGNED, -- int64 signed UNIX time. Refers to time when message was sent to server / user exited app. Convert this to datetime for date-related functions.\n    timezone VARCHAR(5)\n);\nCREATE TABLE keyboard_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    button VARCHAR(31),\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nCREATE TABLE mouse_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    x_position SMALLINT UNSIGNED,\n    y_position SMALLINT UNSIGNED,\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nINSERT INTO inputs (route, utime, timezone)\nVALUE ('/', 1713352865991, 'PHT');\n\nINSERT INTO keyboard_inputs (input_id, button, utime)\nVALUE (LAST_INSERT_ID(), 'a', 1713352865991),\n(LAST_INSERT_ID(), 'b', 1713352865991),\n(LAST_INSERT_ID(), 'c', 1713352865991),\n(LAST_INSERT_ID(), 'd', 1713352865991),\n(LAST_INSERT_ID(), 'e', 1713352865991);\n\nSELECT * FROM keyboard_inputs\nDELETE FROM inputs WHERE utime = 1713352865991\nDROP TABLE keyboard_inputs, mouse_inputs, inputs;\nINSERT INTO inputs (route, utime, timezone) VALUE ('/', 1713352865991, 'PHT'); INSERT INTO keyboard_inputs (input_id, button, utime) VALUE(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991); INSERT INTO mouse_inputs (input_id, x_position, y_position, utime) VALUE(LAST_INSERT_ID(), 107, 107, 1713352865991);\nSELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button;\nSELECT DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y') AS date, COUNT(id) AS visitors FROM inputs GROUP BY DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y'); SELECT id, route, utime, timezone FROM inputs; SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button; SELECT x_position, y_position, COUNT(id) AS frequency FROM mouse_inputs GROUP BY x_position, y_position ORDER BY frequency DESC LIMIT 100;\nSELECT x_position, y_position, COUNT(id) AS frequency\nFROM mouse_inputs\nGROUP BY x_position, y_position\nORDER BY frequency DESC\nLIMIT 100;\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 100",
+    "content": "\\about\nCREATE DATABASE logd;\nUSE logd;\nCREATE TABLE inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    route VARCHAR(50), -- Adjust this if you plan to have a URL larger than 50 chars.\n    utime BIGINT SIGNED, -- int64 signed UNIX time. Refers to time when message was sent to server / user exited app. Convert this to datetime for date-related functions.\n    timezone VARCHAR(5)\n);\nCREATE TABLE keyboard_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    button VARCHAR(31),\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nCREATE TABLE mouse_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    x_position SMALLINT UNSIGNED,\n    y_position SMALLINT UNSIGNED,\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nINSERT INTO inputs (route, utime, timezone)\nVALUE ('/', 1713352865991, 'PHT');\n\nINSERT INTO keyboard_inputs (input_id, button, utime)\nVALUE (LAST_INSERT_ID(), 'a', 1713352865991),\n(LAST_INSERT_ID(), 'b', 1713352865991),\n(LAST_INSERT_ID(), 'c', 1713352865991),\n(LAST_INSERT_ID(), 'd', 1713352865991),\n(LAST_INSERT_ID(), 'e', 1713352865991);\n\nSELECT * FROM keyboard_inputs\nDELETE FROM inputs WHERE utime = 1713352865991\nDROP TABLE keyboard_inputs, mouse_inputs, inputs;\nINSERT INTO inputs (route, utime, timezone) VALUE ('/', 1713352865991, 'PHT'); INSERT INTO keyboard_inputs (input_id, button, utime) VALUE(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991); INSERT INTO mouse_inputs (input_id, x_position, y_position, utime) VALUE(LAST_INSERT_ID(), 107, 107, 1713352865991);\nSELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button;\nSELECT DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y') AS date, COUNT(id) AS visitors FROM inputs GROUP BY DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y'); SELECT id, route, utime, timezone FROM inputs; SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button; SELECT x_position, y_position, COUNT(id) AS frequency FROM mouse_inputs GROUP BY x_position, y_position ORDER BY frequency DESC LIMIT 100;\nSELECT x_position, y_position, COUNT(id) AS frequency\nFROM mouse_inputs\nGROUP BY x_position, y_position\nORDER BY frequency DESC\nLIMIT 100;\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 100\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 1\n",
     "options": {
         "tabSize": 4,
         "indentSize": 4,
@@ -15,22 +15,22 @@
             {
                 "inSelectionMode": false,
                 "selectionStart": {
-                    "lineNumber": 48,
-                    "column": 20
+                    "lineNumber": 53,
+                    "column": 8
                 },
                 "position": {
-                    "lineNumber": 48,
-                    "column": 20
+                    "lineNumber": 53,
+                    "column": 8
                 }
             }
         ],
         "viewState": {
             "scrollLeft": 0,
             "firstPosition": {
-                "lineNumber": 38,
+                "lineNumber": 46,
                 "column": 1
             },
-            "firstPositionDeltaTop": -19
+            "firstPositionDeltaTop": 48
         },
         "contributionsState": {
             "editor.contrib.folding": {},
@@ -110,8 +110,8 @@
                         {
                             "type": 4,
                             "index": 0,
-                            "resultId": "b10f945a-82e1-4178-f1c3-bcc0721d1d4f",
-                            "content": "OK, 0 records retrieved in 1.558ms"
+                            "resultId": "ebfd5d54-0aa7-4690-b706-5d400614e89f",
+                            "content": "OK, 0 records retrieved in 1.399ms"
                         }
                     ]
                 },
@@ -286,7 +286,7 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "319a23b1-468a-4933-b219-d295751434c3"
+                        "e3bc1d74-a1c1-4156-f3a7-c5efedde9852"
                     ]
                 },
                 "currentHeight": 352,
@@ -304,8 +304,8 @@
             },
             "data": [
                 {
-                    "tabId": "df347c39-c5ff-4ab6-9a5b-7888ca5b6366",
-                    "resultId": "319a23b1-468a-4933-b219-d295751434c3",
+                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
+                    "resultId": "e3bc1d74-a1c1-4156-f3a7-c5efedde9852",
                     "rows": [
                         {
                             "0": 41,
@@ -498,7 +498,7 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "c1d2d629-63d9-461e-9207-910f5f91ae6e"
+                        "c2c6c5b6-a87d-44e2-e143-f18a8a544799"
                     ]
                 },
                 "currentHeight": 159.0625,
@@ -525,8 +525,8 @@
             },
             "data": [
                 {
-                    "tabId": "df347c39-c5ff-4ab6-9a5b-7888ca5b6366",
-                    "resultId": "c1d2d629-63d9-461e-9207-910f5f91ae6e",
+                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
+                    "resultId": "c2c6c5b6-a87d-44e2-e143-f18a8a544799",
                     "rows": [
                         {
                             "0": "F5",
@@ -580,9 +580,9 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "8f687c5e-d4f5-4bb5-9e8e-2f41ad5c67c0",
-                        "2b65f763-20bf-421a-d323-b6c321dc8bca",
-                        "f3e6080d-3543-4e43-8603-5c512b3546a4"
+                        "7feb01a4-4b07-496e-c6fb-5ca2f8c0fba6",
+                        "ba7d988d-7698-4e72-fea8-8ff6233a3bc8",
+                        "fea2ff8a-dbb2-4485-bc47-0d3cfff96d0a"
                     ]
                 },
                 "currentHeight": 140.03125,
@@ -627,8 +627,8 @@
             },
             "data": [
                 {
-                    "tabId": "df347c39-c5ff-4ab6-9a5b-7888ca5b6366",
-                    "resultId": "8f687c5e-d4f5-4bb5-9e8e-2f41ad5c67c0",
+                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
+                    "resultId": "7feb01a4-4b07-496e-c6fb-5ca2f8c0fba6",
                     "rows": [
                         {
                             "0": "April 18 2024",
@@ -665,8 +665,8 @@
                     "sql": "SELECT DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y') AS date, COUNT(id) AS visitors FROM inputs GROUP BY DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y')"
                 },
                 {
-                    "tabId": "df347c39-c5ff-4ab6-9a5b-7888ca5b6366",
-                    "resultId": "2b65f763-20bf-421a-d323-b6c321dc8bca",
+                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
+                    "resultId": "ba7d988d-7698-4e72-fea8-8ff6233a3bc8",
                     "rows": [
                         {
                             "0": 11,
@@ -793,8 +793,8 @@
                     "sql": " SELECT id, route, utime, timezone FROM inputs"
                 },
                 {
-                    "tabId": "df347c39-c5ff-4ab6-9a5b-7888ca5b6366",
-                    "resultId": "f3e6080d-3543-4e43-8603-5c512b3546a4",
+                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
+                    "resultId": "fea2ff8a-dbb2-4485-bc47-0d3cfff96d0a",
                     "rows": [
                         {
                             "0": "F5",
@@ -860,7 +860,7 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "fc854800-80dd-4177-f098-18c8d38f54bd"
+                        "73c4e65b-b667-4e7e-81a3-2ced0e2e06a6"
                     ]
                 },
                 "currentHeight": 352,
@@ -878,8 +878,8 @@
             },
             "data": [
                 {
-                    "tabId": "df347c39-c5ff-4ab6-9a5b-7888ca5b6366",
-                    "resultId": "fc854800-80dd-4177-f098-18c8d38f54bd",
+                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
+                    "resultId": "73c4e65b-b667-4e7e-81a3-2ced0e2e06a6",
                     "rows": [
                         {
                             "0": 22,
@@ -1424,7 +1424,7 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "d50f78e2-1a47-440f-cd9c-55fdd4d281a7"
+                        "1840d8c6-a747-4dda-9c1c-91a54ced1bec"
                     ]
                 },
                 "currentHeight": 36,
@@ -1442,8 +1442,8 @@
             },
             "data": [
                 {
-                    "tabId": "df347c39-c5ff-4ab6-9a5b-7888ca5b6366",
-                    "resultId": "d50f78e2-1a47-440f-cd9c-55fdd4d281a7",
+                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
+                    "resultId": "1840d8c6-a747-4dda-9c1c-91a54ced1bec",
                     "rows": [
                         {
                             "0": 934
@@ -1569,16 +1569,70 @@
                             "0": 680
                         },
                         {
+                            "0": 677
+                        },
+                        {
+                            "0": 670
+                        },
+                        {
+                            "0": 669
+                        },
+                        {
+                            "0": 669
+                        },
+                        {
                             "0": 667
+                        },
+                        {
+                            "0": 664
+                        },
+                        {
+                            "0": 661
+                        },
+                        {
+                            "0": 659
                         },
                         {
                             "0": 653
                         },
                         {
+                            "0": 652
+                        },
+                        {
+                            "0": 650
+                        },
+                        {
+                            "0": 645
+                        },
+                        {
                             "0": 640
                         },
                         {
+                            "0": 639
+                        },
+                        {
+                            "0": 636
+                        },
+                        {
+                            "0": 628
+                        },
+                        {
+                            "0": 628
+                        },
+                        {
                             "0": 623
+                        },
+                        {
+                            "0": 622
+                        },
+                        {
+                            "0": 620
+                        },
+                        {
+                            "0": 620
+                        },
+                        {
+                            "0": 616
                         },
                         {
                             "0": 608
@@ -1605,16 +1659,64 @@
                             "0": 502
                         },
                         {
+                            "0": 500
+                        },
+                        {
+                            "0": 499
+                        },
+                        {
                             "0": 494
                         },
                         {
                             "0": 489
                         },
                         {
+                            "0": 488
+                        },
+                        {
+                            "0": 488
+                        },
+                        {
+                            "0": 488
+                        },
+                        {
+                            "0": 482
+                        },
+                        {
+                            "0": 481
+                        },
+                        {
+                            "0": 480
+                        },
+                        {
+                            "0": 479
+                        },
+                        {
+                            "0": 478
+                        },
+                        {
+                            "0": 476
+                        },
+                        {
+                            "0": 474
+                        },
+                        {
+                            "0": 473
+                        },
+                        {
                             "0": 472
                         },
                         {
                             "0": 472
+                        },
+                        {
+                            "0": 469
+                        },
+                        {
+                            "0": 466
+                        },
+                        {
+                            "0": 465
                         },
                         {
                             "0": 464
@@ -1623,127 +1725,25 @@
                             "0": 460
                         },
                         {
+                            "0": 455
+                        },
+                        {
                             "0": 454
+                        },
+                        {
+                            "0": 447
+                        },
+                        {
+                            "0": 442
                         },
                         {
                             "0": 440
                         },
                         {
+                            "0": 435
+                        },
+                        {
                             "0": 434
-                        },
-                        {
-                            "0": 416
-                        },
-                        {
-                            "0": 413
-                        },
-                        {
-                            "0": 407
-                        },
-                        {
-                            "0": 402
-                        },
-                        {
-                            "0": 394
-                        },
-                        {
-                            "0": 381
-                        },
-                        {
-                            "0": 367
-                        },
-                        {
-                            "0": 366
-                        },
-                        {
-                            "0": 365
-                        },
-                        {
-                            "0": 363
-                        },
-                        {
-                            "0": 303
-                        },
-                        {
-                            "0": 303
-                        },
-                        {
-                            "0": 303
-                        },
-                        {
-                            "0": 297
-                        },
-                        {
-                            "0": 294
-                        },
-                        {
-                            "0": 291
-                        },
-                        {
-                            "0": 288
-                        },
-                        {
-                            "0": 284
-                        },
-                        {
-                            "0": 283
-                        },
-                        {
-                            "0": 282
-                        },
-                        {
-                            "0": 282
-                        },
-                        {
-                            "0": 282
-                        },
-                        {
-                            "0": 282
-                        },
-                        {
-                            "0": 282
-                        },
-                        {
-                            "0": 282
-                        },
-                        {
-                            "0": 280
-                        },
-                        {
-                            "0": 278
-                        },
-                        {
-                            "0": 276
-                        },
-                        {
-                            "0": 276
-                        },
-                        {
-                            "0": 274
-                        },
-                        {
-                            "0": 270
-                        },
-                        {
-                            "0": 270
-                        },
-                        {
-                            "0": 269
-                        },
-                        {
-                            "0": 263
-                        },
-                        {
-                            "0": 258
-                        },
-                        {
-                            "0": 258
-                        },
-                        {
-                            "0": 257
-                        },
-                        {
-                            "0": 256
                         }
                     ],
                     "columns": [
@@ -1756,7 +1756,7 @@
                         }
                     ],
                     "executionInfo": {
-                        "text": "OK, 100 records retrieved in 2.913ms"
+                        "text": "OK, 100 records retrieved in 1.797ms"
                     },
                     "totalRowCount": 100,
                     "hasMoreRows": false,
@@ -1765,6 +1765,79 @@
                     "sql": "SELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 100"
                 }
             ]
+        },
+        {
+            "state": {
+                "start": 50,
+                "end": 53,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "98fe13c5-8e0f-4818-9ab2-4aa258a11fb9"
+                    ]
+                },
+                "currentHeight": 352,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 68
+                        },
+                        "contentStart": 0,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
+                    "resultId": "98fe13c5-8e0f-4818-9ab2-4aa258a11fb9",
+                    "rows": [
+                        {
+                            "0": 934
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "y_position",
+                            "field": "0",
+                            "dataType": {
+                                "type": 2
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 1 record retrieved in 1.212ms"
+                    },
+                    "totalRowCount": 1,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "SELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 1"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 54,
+                "end": 54,
+                "language": "mysql",
+                "currentHeight": 180,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 0
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
         }
     ]
 }

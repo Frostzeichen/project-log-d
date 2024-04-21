@@ -59,8 +59,8 @@ class Logd {
             if (i < object.data.mouse.length - 1) {
                 mouse_inputs += `,`;
             } else mouse_inputs += ";";
-            data.push(object.data.mouse[i].pixel.x);
-            data.push(object.data.mouse[i].pixel.y);
+            data.push((object.data.mouse[i].pixel.x >= 0) ? object.data.mouse[i].pixel.x : 0);
+            data.push((object.data.mouse[i].pixel.y >= 0) ? object.data.mouse[i].pixel.y : 0);
             data.push(object.data.mouse[i].timestamp);
         }
     
