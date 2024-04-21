@@ -20,8 +20,8 @@ app.get("/favicon.ico", (req, res) => {
 });
 
 app.get("/log-d.js", (req, res) => {
-    res.redirect("http://localhost:3001/log-d.js");
-    // res.sendFile(__dirname + "/views/assets/log-d.js");
+    try { res.redirect("http://localhost:3001/log-d.js"); }
+    catch { res.status(503).send("Service Unavailable") }
 });
 
 app.post("/log.d/receive", (req, res) => {
