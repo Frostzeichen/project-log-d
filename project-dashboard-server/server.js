@@ -58,6 +58,14 @@ app.get("/logd/download/logd.zip", (req, res) => {
     res.sendFile(__dirname + "/logd/logd.zip");
 });
 
+app.get("/styles.css", (req, res) => {
+    res.sendFile(__dirname + "/views/assets/styles.css")
+});
+
+app.get("/favicon.ico", (req, res) => {
+    res.sendFile(__dirname + "/views/assets/favicon.ico");
+});
+
 app.post("/logd/receive", (req, res, next) => {
     const logd = d.migrateQuery(req.body);
     const query = mysql.format(logd.query, logd.data);
