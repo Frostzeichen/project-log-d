@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Log.d Documentation Page</title>
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/normalize.css@8.0.1/normalize.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.esm.min.mjs"></script>
+    </head>
+    <body>
+        <div class="container">
+            <header class="row">
+                <h1>About Project Log.d</h1>
+            </header>
+            <section class="row">
+                <nav class="col col-4">
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="btn btn-secondary w-75">About Project Log.d</a></li>
+                        <li><a href="/logd/download/logd.zip" target="_blank" class="btn btn-success w-75">Download</a></li>
+                        <li><h3>Documentation</h3></li>
+                        <li><a href="/docs/project-architecture" class="btn btn-primary w-75">Project Architecture</a></li>
+                        <li><a href="/docs/data-transfer-mechanism" class="btn btn-primary w-75">Data Transfer Mechanism</a></li>
+                        <li><a href="/docs/schema" class="btn btn-primary w-75">Schema</a></li>
+                        <li><a href="/docs/notes-on-schema" class="btn btn-primary w-75">Notes on Schema</a></li>
+                        <li><a href="/docs/api" class="btn btn-primary w-75">API</a></li>
+                        <li><a href="https://github.com/Frostzeichen/project-log-d" class="btn btn-primary w-75">GitHub Repository</a></li>
+                        <li><a href="http://localhost:3001" class="btn btn-dark w-75">Project Dashboard Server</a></li>
+                    </ul>
+                </nav>
+                <main class="col">
+                    <h2>Project Architecture</h2>
+                    <pre class="mermaid">
+                        erDiagram
+                            inputs {
+                                id ID PK
+                                route VARCHAR(50)
+                                utime BIGINT "int64 signed UNIX time"
+                                timezone VARCHAR(3)
+                            }
+                            keyboard_inputs {
+                                id ID PK
+                                input_id ID FK
+                                button VARCHAR
+                                time TIMESTAMP
+                            }
+                            mouse_inputs {
+                                id ID
+                                input_id ID FK
+                                x_position INT
+                                y_position INT
+                                time TIMESTAMP
+                            }
+
+                            inputs ||--o{ keyboard_inputs : input_id
+                            inputs ||--o{ mouse_inputs : input_id
+                    </pre>
+                    <p>The <i>time</i> unit here refers to the time after UNIX epoch (measured in milliseconds) when the recorded data has been logged on the frontend side.</p>
+                </main>
+            </section>
+        </div>
+        <script src="/logd.js">
+        </script>
+    </body>
+</html>
