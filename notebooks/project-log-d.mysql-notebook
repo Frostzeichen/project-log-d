@@ -2,7 +2,7 @@
     "type": "MySQLNotebook",
     "version": "1.0",
     "caption": "DB Notebook",
-    "content": "\\about\nCREATE DATABASE logd;\nUSE logd;\nCREATE TABLE inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    route VARCHAR(50), -- Adjust this if you plan to have a URL larger than 50 chars.\n    utime BIGINT SIGNED, -- int64 signed UNIX time. Refers to time when message was sent to server / user exited app. Convert this to datetime for date-related functions.\n    timezone VARCHAR(5)\n);\nCREATE TABLE keyboard_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    button VARCHAR(31),\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nCREATE TABLE mouse_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    x_position SMALLINT UNSIGNED,\n    y_position SMALLINT UNSIGNED,\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nINSERT INTO inputs (route, utime, timezone)\nVALUE ('/', 1713352865991, 'PHT');\n\nINSERT INTO keyboard_inputs (input_id, button, utime)\nVALUE (LAST_INSERT_ID(), 'a', 1713352865991),\n(LAST_INSERT_ID(), 'b', 1713352865991),\n(LAST_INSERT_ID(), 'c', 1713352865991),\n(LAST_INSERT_ID(), 'd', 1713352865991),\n(LAST_INSERT_ID(), 'e', 1713352865991);\n\nSELECT * FROM keyboard_inputs\nDELETE FROM inputs WHERE utime = 1713352865991\nDROP TABLE keyboard_inputs, mouse_inputs, inputs;\nINSERT INTO inputs (route, utime, timezone) VALUE ('/', 1713352865991, 'PHT'); INSERT INTO keyboard_inputs (input_id, button, utime) VALUE(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991); INSERT INTO mouse_inputs (input_id, x_position, y_position, utime) VALUE(LAST_INSERT_ID(), 107, 107, 1713352865991);\nSELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button;\nSELECT DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y') AS date, COUNT(id) AS visitors FROM inputs GROUP BY DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y'); SELECT id, route, utime, timezone FROM inputs; SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button; SELECT x_position, y_position, COUNT(id) AS frequency FROM mouse_inputs GROUP BY x_position, y_position ORDER BY frequency DESC LIMIT 100;\nSELECT x_position, y_position, COUNT(id) AS frequency\nFROM mouse_inputs\nGROUP BY x_position, y_position\nORDER BY frequency DESC\nLIMIT 100;\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 100\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 1\n",
+    "content": "\\about\nCREATE DATABASE logd;\nUSE logd;\nCREATE TABLE inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    route VARCHAR(50), -- Adjust this if you plan to have a URL larger than 50 chars.\n    utime BIGINT SIGNED, -- int64 signed UNIX time. Refers to time when message was sent to server / user exited app. Convert this to datetime for date-related functions.\n    timezone VARCHAR(5)\n);\nCREATE TABLE keyboard_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    button VARCHAR(31),\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nCREATE TABLE mouse_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    x_position SMALLINT UNSIGNED,\n    y_position SMALLINT UNSIGNED,\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nINSERT INTO inputs (route, utime, timezone)\nVALUE ('/', 1713352865991, 'PHT');\n\nINSERT INTO keyboard_inputs (input_id, button, utime)\nVALUE (LAST_INSERT_ID(), 'a', 1713352865991),\n(LAST_INSERT_ID(), 'b', 1713352865991),\n(LAST_INSERT_ID(), 'c', 1713352865991),\n(LAST_INSERT_ID(), 'd', 1713352865991),\n(LAST_INSERT_ID(), 'e', 1713352865991);\n\nSELECT * FROM keyboard_inputs\nDELETE FROM inputs WHERE utime = 1713352865991\nDROP TABLE keyboard_inputs, mouse_inputs, inputs;\nINSERT INTO inputs (route, utime, timezone) VALUE ('/', 1713352865991, 'PHT'); INSERT INTO keyboard_inputs (input_id, button, utime) VALUE(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991); INSERT INTO mouse_inputs (input_id, x_position, y_position, utime) VALUE(LAST_INSERT_ID(), 107, 107, 1713352865991);\nSELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button;\nSELECT DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y') AS date, COUNT(id) AS visitors FROM inputs GROUP BY DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y'); SELECT id, route, utime, timezone FROM inputs; SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button; SELECT x_position, y_position, COUNT(id) AS frequency FROM mouse_inputs GROUP BY x_position, y_position ORDER BY frequency DESC LIMIT 100;\nSELECT x_position, y_position, COUNT(id) AS frequency\nFROM mouse_inputs\nGROUP BY x_position, y_position\nORDER BY frequency DESC\nLIMIT 100;\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 100\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 1\nSELECT x_position, y_position, utime\nFROM mouse_inputs\nWHERE input_id = 22\nSELECT MAX(mouse_inputs.utime) - MIN(mouse_inputs.utime)\nFROM mouse_inputs\nWHERE input_id = 22\n",
     "options": {
         "tabSize": 4,
         "indentSize": 4,
@@ -15,22 +15,22 @@
             {
                 "inSelectionMode": false,
                 "selectionStart": {
-                    "lineNumber": 53,
-                    "column": 8
+                    "lineNumber": 59,
+                    "column": 20
                 },
                 "position": {
-                    "lineNumber": 53,
-                    "column": 8
+                    "lineNumber": 59,
+                    "column": 20
                 }
             }
         ],
         "viewState": {
             "scrollLeft": 0,
             "firstPosition": {
-                "lineNumber": 46,
+                "lineNumber": 54,
                 "column": 1
             },
-            "firstPositionDeltaTop": 48
+            "firstPositionDeltaTop": 41
         },
         "contributionsState": {
             "editor.contrib.folding": {},
@@ -1822,7 +1822,334 @@
         {
             "state": {
                 "start": 54,
-                "end": 54,
+                "end": 56,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "b31820c8-ef51-4fbf-d06b-671f98a573f5"
+                    ]
+                },
+                "currentHeight": 352,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 74
+                        },
+                        "contentStart": 0,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
+                    "resultId": "b31820c8-ef51-4fbf-d06b-671f98a573f5",
+                    "rows": [
+                        {
+                            "0": 898,
+                            "1": 472,
+                            "2": 1713532514182
+                        },
+                        {
+                            "0": 911,
+                            "1": 464,
+                            "2": 1713532514187
+                        },
+                        {
+                            "0": 923,
+                            "1": 454,
+                            "2": 1713532514202
+                        },
+                        {
+                            "0": 931,
+                            "1": 434,
+                            "2": 1713532514216
+                        },
+                        {
+                            "0": 939,
+                            "1": 413,
+                            "2": 1713532514229
+                        },
+                        {
+                            "0": 960,
+                            "1": 381,
+                            "2": 1713532514240
+                        },
+                        {
+                            "0": 974,
+                            "1": 363,
+                            "2": 1713532514256
+                        },
+                        {
+                            "0": 35,
+                            "1": 288,
+                            "2": 1713532514267
+                        },
+                        {
+                            "0": 33,
+                            "1": 54,
+                            "2": 1713532514281
+                        },
+                        {
+                            "0": 41,
+                            "1": 38,
+                            "2": 1713532514293
+                        },
+                        {
+                            "0": 50,
+                            "1": 21,
+                            "2": 1713532514305
+                        },
+                        {
+                            "0": 63,
+                            "1": 8,
+                            "2": 1713532514317
+                        },
+                        {
+                            "0": 84,
+                            "1": 214,
+                            "2": 1713532514330
+                        },
+                        {
+                            "0": 92,
+                            "1": 206,
+                            "2": 1713532514343
+                        },
+                        {
+                            "0": 98,
+                            "1": 202,
+                            "2": 1713532514356
+                        },
+                        {
+                            "0": 57,
+                            "1": 22,
+                            "2": 1713532514369
+                        },
+                        {
+                            "0": 63,
+                            "1": 18,
+                            "2": 1713532514383
+                        },
+                        {
+                            "0": 75,
+                            "1": 16,
+                            "2": 1713532514395
+                        },
+                        {
+                            "0": 83,
+                            "1": 14,
+                            "2": 1713532514408
+                        },
+                        {
+                            "0": 93,
+                            "1": 11,
+                            "2": 1713532514417
+                        },
+                        {
+                            "0": 105,
+                            "1": 7,
+                            "2": 1713532514429
+                        },
+                        {
+                            "0": 117,
+                            "1": 3,
+                            "2": 1713532514442
+                        },
+                        {
+                            "0": 134,
+                            "1": 23,
+                            "2": 1713532514456
+                        },
+                        {
+                            "0": 159,
+                            "1": 17,
+                            "2": 1713532514468
+                        },
+                        {
+                            "0": 194,
+                            "1": 9,
+                            "2": 1713532514481
+                        },
+                        {
+                            "0": 229,
+                            "1": 3,
+                            "2": 1713532514493
+                        },
+                        {
+                            "0": 300,
+                            "1": 151,
+                            "2": 1713532514505
+                        },
+                        {
+                            "0": 322,
+                            "1": 147,
+                            "2": 1713532514518
+                        },
+                        {
+                            "0": 336,
+                            "1": 143,
+                            "2": 1713532514532
+                        },
+                        {
+                            "0": 352,
+                            "1": 138,
+                            "2": 1713532514545
+                        },
+                        {
+                            "0": 352,
+                            "1": 18,
+                            "2": 1713532514557
+                        },
+                        {
+                            "0": 368,
+                            "1": 13,
+                            "2": 1713532514838
+                        },
+                        {
+                            "0": 388,
+                            "1": 4,
+                            "2": 1713532514850
+                        },
+                        {
+                            "0": 429,
+                            "1": 100,
+                            "2": 1713532514863
+                        },
+                        {
+                            "0": 444,
+                            "1": 85,
+                            "2": 1713532514877
+                        },
+                        {
+                            "0": 472,
+                            "1": 53,
+                            "2": 1713532514891
+                        },
+                        {
+                            "0": 495,
+                            "1": 27,
+                            "2": 1713532514902
+                        },
+                        {
+                            "0": 513,
+                            "1": 5,
+                            "2": 1713532514915
+                        },
+                        {
+                            "0": 1199,
+                            "1": 43,
+                            "2": 1713532514930
+                        },
+                        {
+                            "0": 1209,
+                            "1": 24,
+                            "2": 1713532514942
+                        },
+                        {
+                            "0": 1215,
+                            "1": 14,
+                            "2": 1713532514954
+                        },
+                        {
+                            "0": 1219,
+                            "1": 6,
+                            "2": 1713532514967
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "x_position",
+                            "field": "0",
+                            "dataType": {
+                                "type": 2
+                            }
+                        },
+                        {
+                            "title": "y_position",
+                            "field": "1",
+                            "dataType": {
+                                "type": 2
+                            }
+                        },
+                        {
+                            "title": "utime",
+                            "field": "2",
+                            "dataType": {
+                                "type": 5
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 42 records retrieved in 2.874ms"
+                    },
+                    "totalRowCount": 42,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "SELECT x_position, y_position, utime\nFROM mouse_inputs\nWHERE input_id = 22"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 57,
+                "end": 59,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "2a272bfc-1be1-4b75-9369-9df30267d98c"
+                    ]
+                },
+                "currentHeight": 91.09375,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 94
+                        },
+                        "contentStart": 0,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
+                    "resultId": "2a272bfc-1be1-4b75-9369-9df30267d98c",
+                    "rows": [
+                        {
+                            "0": 785
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "MAX(mouse_inputs.utime) - MIN(mouse_inputs.utime)",
+                            "field": "0",
+                            "dataType": {
+                                "type": 4
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 1 record retrieved in 1.213ms"
+                    },
+                    "totalRowCount": 1,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "SELECT MAX(mouse_inputs.utime) - MIN(mouse_inputs.utime)\nFROM mouse_inputs\nWHERE input_id = 22"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 60,
+                "end": 60,
                 "language": "mysql",
                 "currentHeight": 180,
                 "statements": [
