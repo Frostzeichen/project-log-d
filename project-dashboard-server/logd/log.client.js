@@ -11,7 +11,7 @@ log = {
 const submitLog = (log) => {
     log.timestamp = Date.now();
 
-    fetch("/log.d/receive", {
+    fetch("/logd/receive", {
         method: "post",
         headers: { // Required headers. See Postman documentation "user to normal".
             "Content-Type": "application/json",

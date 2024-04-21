@@ -19,8 +19,8 @@ app.get("/favicon.ico", (req, res) => {
     res.sendFile(__dirname + "/views/assets/favicon.ico");
 });
 
-app.get("/log-d.js", (req, res) => {
-    try { res.redirect("http://localhost:3001/log-d.js"); }
+app.get("/logd.js", (req, res) => {
+    try { res.redirect("http://localhost:3001/logd.js"); }
     catch { res.status(503).send("Service Unavailable") }
 });
 
@@ -29,10 +29,10 @@ app.get("/logd/download/logd.zip", (req, res) => {
     catch { res.status(503).send("Service Unavailable") }
 })
 
-app.post("/log.d/receive", (req, res) => {
+app.post("/logd/receive", (req, res) => {
     try {
         req.body.timezone = "PHT"
-        d.divert(req.body, "http://localhost:3001/log.d/receive");
+        d.divert(req.body, "http://localhost:3001/logd/receive");
         res.status(200).send("OK");
     }
     catch { res.status(503).send("Service Unavailable") }

@@ -50,7 +50,7 @@ app.get("/replays/:id", (req, res) => {
     );
 });
 
-app.get("/log-d.js", (req, res) => {
+app.get("/logd.js", (req, res) => {
     res.sendFile(__dirname + "/logd/log.client.js");
 });
 
@@ -58,13 +58,13 @@ app.get("/logd/download/logd.zip", (req, res) => {
     res.sendFile(__dirname + "/logd/logd.zip");
 });
 
-app.post("/log.d/receive", (req, res) => {
+app.post("/logd/receive", (req, res, next) => {
     const logd = d.migrateQuery(req.body);
     const query = mysql.format(logd.query, logd.data);
-
     connection.query(query, (err) => {
         if (err) throw err;
     });
+    console.log("OK")
     res.status(200).send("OK");
 });
 
@@ -80,5 +80,4 @@ io.on("connection", (socket) => {
             socket.emit("logd", row);
         }
     );
-    
 });
