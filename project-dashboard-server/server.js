@@ -26,6 +26,10 @@ app.get("/log-d.js", (req, res) => {
     res.sendFile(__dirname + "/logd/log.client.js");
 });
 
+app.get("/logd/download/logd.zip", (req, res) => {
+    res.sendFile(__dirname + "/logd/logd.zip");
+});
+
 app.post("/log.d/receive", (req, res) => {
     const logd = d.migrateQuery(req.body);
     const query = mysql.format(logd.query, logd.data);

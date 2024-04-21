@@ -24,10 +24,18 @@ app.get("/log-d.js", (req, res) => {
     catch { res.status(503).send("Service Unavailable") }
 });
 
+app.get("/logd/download/logd.zip", (req, res) => {
+    try { res.redirect("http://localhost:3001/logd/download/logd.zip"); }
+    catch { res.status(503).send("Service Unavailable") }
+})
+
 app.post("/log.d/receive", (req, res) => {
-    req.body.timezone = "PHT"
-    d.divert(req.body, "http://localhost:3001/log.d/receive");
-    res.status(200).send("OK");
+    try {
+        req.body.timezone = "PHT"
+        d.divert(req.body, "http://localhost:3001/log.d/receive");
+        res.status(200).send("OK");
+    }
+    catch { res.status(503).send("Service Unavailable") }
 });
 
 app.listen(PORT);
