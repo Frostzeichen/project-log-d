@@ -27,7 +27,7 @@ app.get("/log-d.js", (req, res) => {
 });
 
 app.post("/log.d/receive", (req, res) => {
-    const logd = d.migrateQUery(req.body);
+    const logd = d.migrateQuery(req.body);
     const query = mysql.format(logd.query, logd.data);
 
     connection.query(query, (err) => {
