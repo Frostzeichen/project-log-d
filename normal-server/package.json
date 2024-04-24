@@ -7,9 +7,6 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "devDependencies": {
-    "vite": "^5.2.0"
-  },
   "dependencies": {
     "express": "^4.19.2"
   }
