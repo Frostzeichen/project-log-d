@@ -82,7 +82,7 @@ const io = require("socket.io")(server);
 
 io.on("connection", (socket) => {
     connection.query(
-        "SELECT DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y') AS date, COUNT(id) AS visitors FROM inputs GROUP BY DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y'); SELECT id, route, utime, timezone FROM inputs; SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button; SELECT x_position, y_position, COUNT(id) AS frequency FROM mouse_inputs GROUP BY x_position, y_position ORDER BY frequency DESC LIMIT 100; SELECT id FROM inputs;",
+        "SELECT DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y') AS date, COUNT(id) AS visitors FROM inputs GROUP BY DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y'); SELECT inputs.id, inputs.route, inputs.utime, inputs.timezone FROM inputs JOIN mouse_inputs ON mouse_inputs.input_id = inputs.id GROUP BY mouse_inputs.input_id HAVING COUNT(mouse_inputs.input_id) > 0 ORDER BY inputs.utime DESC; SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button; SELECT x_position, y_position, COUNT(id) AS frequency FROM mouse_inputs GROUP BY x_position, y_position ORDER BY frequency DESC LIMIT 100; SELECT id FROM inputs;",
         (err, row) => {
             if (err) throw err;
             socket.emit("logd", row);

@@ -2,7 +2,7 @@
     "type": "MySQLNotebook",
     "version": "1.0",
     "caption": "DB Notebook",
-    "content": "\\about\nCREATE DATABASE logd;\nUSE logd;\nCREATE TABLE inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    route VARCHAR(50), -- Adjust this if you plan to have a URL larger than 50 chars.\n    utime BIGINT SIGNED, -- int64 signed UNIX time. Refers to time when message was sent to server / user exited app. Convert this to datetime for date-related functions.\n    timezone VARCHAR(5)\n);\nCREATE TABLE keyboard_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    button VARCHAR(31),\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nCREATE TABLE mouse_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    x_position SMALLINT UNSIGNED,\n    y_position SMALLINT UNSIGNED,\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nINSERT INTO inputs (route, utime, timezone)\nVALUE ('/', 1713352865991, 'PHT');\n\nINSERT INTO keyboard_inputs (input_id, button, utime)\nVALUE (LAST_INSERT_ID(), 'a', 1713352865991),\n(LAST_INSERT_ID(), 'b', 1713352865991),\n(LAST_INSERT_ID(), 'c', 1713352865991),\n(LAST_INSERT_ID(), 'd', 1713352865991),\n(LAST_INSERT_ID(), 'e', 1713352865991);\n\nSELECT * FROM keyboard_inputs\nDELETE FROM inputs WHERE utime = 1713352865991\nDROP TABLE keyboard_inputs, mouse_inputs, inputs;\nINSERT INTO inputs (route, utime, timezone) VALUE ('/', 1713352865991, 'PHT'); INSERT INTO keyboard_inputs (input_id, button, utime) VALUE(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991); INSERT INTO mouse_inputs (input_id, x_position, y_position, utime) VALUE(LAST_INSERT_ID(), 107, 107, 1713352865991);\nSELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button;\nSELECT DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y') AS date, COUNT(id) AS visitors FROM inputs GROUP BY DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y'); SELECT id, route, utime, timezone FROM inputs; SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button; SELECT x_position, y_position, COUNT(id) AS frequency FROM mouse_inputs GROUP BY x_position, y_position ORDER BY frequency DESC LIMIT 100; SELECT id FROM inputs;\nSELECT x_position, y_position, COUNT(id) AS frequency\nFROM mouse_inputs\nGROUP BY x_position, y_position\nORDER BY frequency DESC\nLIMIT 100;\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 100\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 1\nSELECT x_position, y_position, (SELECT MAX(utime) FROM mouse_inputs WHERE input_id = 22) - utime AS millis\nFROM mouse_inputs\nWHERE input_id = 22\nORDER BY millis;\nSELECT MAX(mouse_inputs.utime) - MIN(mouse_inputs.utime) as timeOnPage\nFROM mouse_inputs\nWHERE input_id = 22\nSELECT id FROM inputs;\nSELECT id, utime\nFROM inputs\nORDER BY utime ASC\n",
+    "content": "\\about\nCREATE DATABASE logd;\nUSE logd;\nCREATE TABLE inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    route VARCHAR(50), -- Adjust this if you plan to have a URL larger than 50 chars.\n    utime BIGINT SIGNED, -- int64 signed UNIX time. Refers to time when message was sent to server / user exited app. Convert this to datetime for date-related functions.\n    timezone VARCHAR(5)\n);\nCREATE TABLE keyboard_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    button VARCHAR(31),\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nCREATE TABLE mouse_inputs (\n    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n    input_id INT,\n    x_position SMALLINT UNSIGNED,\n    y_position SMALLINT UNSIGNED,\n    utime BIGINT,\n    FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE\n);\nINSERT INTO inputs (route, utime, timezone)\nVALUE ('/', 1713352865991, 'PHT');\n\nINSERT INTO keyboard_inputs (input_id, button, utime)\nVALUE (LAST_INSERT_ID(), 'a', 1713352865991),\n(LAST_INSERT_ID(), 'b', 1713352865991),\n(LAST_INSERT_ID(), 'c', 1713352865991),\n(LAST_INSERT_ID(), 'd', 1713352865991),\n(LAST_INSERT_ID(), 'e', 1713352865991);\n\nSELECT * FROM keyboard_inputs\nDELETE FROM inputs WHERE utime = 1713352865991\nDROP TABLE keyboard_inputs, mouse_inputs, inputs;\nINSERT INTO inputs (route, utime, timezone) VALUE ('/', 1713352865991, 'PHT'); INSERT INTO keyboard_inputs (input_id, button, utime) VALUE(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991),(LAST_INSERT_ID(), 'F5', 1713352865991); INSERT INTO mouse_inputs (input_id, x_position, y_position, utime) VALUE(LAST_INSERT_ID(), 107, 107, 1713352865991);\nSELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button;\nSELECT DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y') AS date, COUNT(id) AS visitors FROM inputs GROUP BY DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y'); SELECT inputs.id, inputs.route, inputs.utime, inputs.timezone FROM inputs JOIN mouse_inputs ON mouse_inputs.input_id = inputs.id GROUP BY mouse_inputs.input_id HAVING COUNT(mouse_inputs.id) >= 0 ORDER BY inputs.utime DESC; SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button; SELECT x_position, y_position, COUNT(id) AS frequency FROM mouse_inputs GROUP BY x_position, y_position ORDER BY frequency DESC LIMIT 100; SELECT id FROM inputs;\nSELECT x_position, y_position, COUNT(id) AS frequency\nFROM mouse_inputs\nGROUP BY x_position, y_position\nORDER BY frequency DESC\nLIMIT 100;\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 100\nSELECT y_position\nFROM mouse_inputs\nORDER BY y_position DESC\nLIMIT 1\nSELECT x_position, y_position, (SELECT MAX(utime) FROM mouse_inputs WHERE input_id = 22) - utime AS millis\nFROM mouse_inputs\nWHERE input_id = 22\nORDER BY millis;\nSELECT MAX(mouse_inputs.utime) - MIN(mouse_inputs.utime) as timeOnPage\nFROM mouse_inputs\nWHERE input_id = 22\nSELECT id FROM inputs;\nSELECT id, utime\nFROM inputs\nORDER BY utime ASC\nSELECT inputs.id, inputs.route, inputs.utime, inputs.timezone\nFROM inputs\nJOIN mouse_inputs ON mouse_inputs.input_id = inputs.id\nGROUP BY mouse_inputs.input_id\nHAVING COUNT(mouse_inputs.input_id) > 0\nORDER BY inputs.utime DESC\n",
     "options": {
         "tabSize": 4,
         "indentSize": 4,
@@ -15,22 +15,22 @@
             {
                 "inSelectionMode": false,
                 "selectionStart": {
-                    "lineNumber": 62,
-                    "column": 17
+                    "lineNumber": 40,
+                    "column": 277
                 },
                 "position": {
-                    "lineNumber": 62,
-                    "column": 17
+                    "lineNumber": 40,
+                    "column": 277
                 }
             }
         ],
         "viewState": {
-            "scrollLeft": 0,
+            "scrollLeft": 2046,
             "firstPosition": {
-                "lineNumber": 61,
+                "lineNumber": 40,
                 "column": 1
             },
-            "firstPositionDeltaTop": -3
+            "firstPositionDeltaTop": 112
         },
         "contributionsState": {
             "editor.contrib.folding": {},
@@ -110,8 +110,8 @@
                         {
                             "type": 4,
                             "index": 0,
-                            "resultId": "ebfd5d54-0aa7-4690-b706-5d400614e89f",
-                            "content": "OK, 0 records retrieved in 1.399ms"
+                            "resultId": "67e4a71d-fe46-426b-ec2e-f5fd30425b86",
+                            "content": "OK, 0 records retrieved in 0.585ms"
                         }
                     ]
                 },
@@ -286,7 +286,7 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "e3bc1d74-a1c1-4156-f3a7-c5efedde9852"
+                        "a86327ff-3611-4699-be51-729bae75a65b"
                     ]
                 },
                 "currentHeight": 352,
@@ -304,8 +304,8 @@
             },
             "data": [
                 {
-                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "e3bc1d74-a1c1-4156-f3a7-c5efedde9852",
+                    "tabId": "a543bd4a-9997-42f3-906c-40243a09f8a2",
+                    "resultId": "a86327ff-3611-4699-be51-729bae75a65b",
                     "rows": [
                         {
                             "0": 41,
@@ -498,7 +498,7 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "c2c6c5b6-a87d-44e2-e143-f18a8a544799"
+                        "7b37f776-ea9f-411c-e00a-ee6240bc662f"
                     ]
                 },
                 "currentHeight": 159.0625,
@@ -525,8 +525,8 @@
             },
             "data": [
                 {
-                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "c2c6c5b6-a87d-44e2-e143-f18a8a544799",
+                    "tabId": "a543bd4a-9997-42f3-906c-40243a09f8a2",
+                    "resultId": "7b37f776-ea9f-411c-e00a-ee6240bc662f",
                     "rows": [
                         {
                             "0": "F5",
@@ -580,15 +580,15 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "584b268d-ff8c-42a2-d848-297596a99966",
-                        "32bf45c4-0561-4587-fcb3-f2194b00c85b",
-                        "e765ef80-f56f-43f8-e46d-7a6b1e4c4130",
-                        "63a272cc-4c64-4818-8ce2-4e554a2ae5d1",
-                        "c1b62ff8-b52c-4678-90a0-33a24a0417fd"
+                        "43ddc510-c896-4cc4-9c68-abed91d35fb1",
+                        "ee00b6f9-a784-475a-880c-4af0e5f22bd7",
+                        "0391e293-4489-464d-ba60-2d52b7b859a2",
+                        "50b0f8ef-61f5-4553-90f0-aeeaffcd7c74",
+                        "9554cc86-0da6-48f3-be5f-3f15e849dfde"
                     ]
                 },
-                "currentHeight": 36,
-                "currentSet": 5,
+                "currentHeight": 303,
+                "currentSet": 2,
                 "statements": [
                     {
                         "delimiter": ";",
@@ -603,7 +603,7 @@
                         "delimiter": ";",
                         "span": {
                             "start": 161,
-                            "length": 47
+                            "length": 223
                         },
                         "contentStart": 162,
                         "state": 0
@@ -611,45 +611,45 @@
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 208,
+                            "start": 384,
                             "length": 74
                         },
-                        "contentStart": 209,
+                        "contentStart": 385,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 282,
+                            "start": 458,
                             "length": 139
                         },
-                        "contentStart": 283,
+                        "contentStart": 459,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 421,
+                            "start": 597,
                             "length": 23
                         },
-                        "contentStart": 422,
+                        "contentStart": 598,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 444,
+                            "start": 620,
                             "length": 0
                         },
-                        "contentStart": 443,
+                        "contentStart": 619,
                         "state": 3
                     }
                 ]
             },
             "data": [
                 {
-                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "584b268d-ff8c-42a2-d848-297596a99966",
+                    "tabId": "a543bd4a-9997-42f3-906c-40243a09f8a2",
+                    "resultId": "43ddc510-c896-4cc4-9c68-abed91d35fb1",
                     "rows": [
                         {
                             "0": "April 18 2024",
@@ -665,7 +665,7 @@
                         },
                         {
                             "0": "April 21 2024",
-                            "1": 41
+                            "1": 77
                         }
                     ],
                     "columns": [
@@ -685,7 +685,7 @@
                         }
                     ],
                     "executionInfo": {
-                        "text": "OK, 4 records retrieved in 2.461ms"
+                        "text": "OK, 4 records retrieved in 0.993ms"
                     },
                     "totalRowCount": 4,
                     "hasMoreRows": false,
@@ -694,367 +694,121 @@
                     "sql": "SELECT DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y') AS date, COUNT(id) AS visitors FROM inputs GROUP BY DATE_FORMAT(FROM_UNIXTIME(utime/1000), '%M %d %Y')"
                 },
                 {
-                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "32bf45c4-0561-4587-fcb3-f2194b00c85b",
+                    "tabId": "a543bd4a-9997-42f3-906c-40243a09f8a2",
+                    "resultId": "ee00b6f9-a784-475a-880c-4af0e5f22bd7",
                     "rows": [
                         {
-                            "0": 11,
-                            "1": "/",
-                            "2": 1713439383166,
+                            "0": 144,
+                            "1": "/docs/api",
+                            "2": 1713728648225,
                             "3": "PHT"
                         },
                         {
-                            "0": 12,
+                            "0": 141,
                             "1": "/",
-                            "2": 1713439389339,
+                            "2": 1713727010832,
                             "3": "PHT"
                         },
                         {
-                            "0": 13,
+                            "0": 140,
                             "1": "/",
-                            "2": 1713439389757,
+                            "2": 1713726967578,
                             "3": "PHT"
                         },
                         {
-                            "0": 14,
+                            "0": 139,
                             "1": "/",
-                            "2": 1713439390007,
+                            "2": 1713719765502,
                             "3": "PHT"
                         },
                         {
-                            "0": 15,
+                            "0": 138,
                             "1": "/",
-                            "2": 1713446552781,
+                            "2": 1713719764646,
                             "3": "PHT"
                         },
                         {
-                            "0": 16,
+                            "0": 137,
                             "1": "/",
-                            "2": 1713446630757,
+                            "2": 1713715124706,
                             "3": "PHT"
                         },
                         {
-                            "0": 17,
+                            "0": 136,
                             "1": "/",
-                            "2": 1713456851523,
+                            "2": 1713715123401,
                             "3": "PHT"
                         },
                         {
-                            "0": 18,
+                            "0": 97,
                             "1": "/",
-                            "2": 1713527083796,
+                            "2": 1713712228077,
                             "3": "PHT"
                         },
                         {
-                            "0": 19,
+                            "0": 96,
                             "1": "/",
-                            "2": 1713527084462,
+                            "2": 1713712227109,
                             "3": "PHT"
                         },
                         {
-                            "0": 20,
+                            "0": 95,
                             "1": "/",
-                            "2": 1713527085672,
+                            "2": 1713712217913,
                             "3": "PHT"
                         },
                         {
-                            "0": 21,
+                            "0": 94,
                             "1": "/",
-                            "2": 1713532497544,
+                            "2": 1713712217440,
                             "3": "PHT"
                         },
                         {
-                            "0": 22,
+                            "0": 93,
                             "1": "/",
-                            "2": 1713532515886,
+                            "2": 1713712217172,
                             "3": "PHT"
                         },
                         {
-                            "0": 23,
+                            "0": 92,
                             "1": "/",
-                            "2": 1713532524430,
+                            "2": 1713712216069,
                             "3": "PHT"
                         },
                         {
-                            "0": 24,
+                            "0": 82,
                             "1": "/",
-                            "2": 1713532525090,
+                            "2": 1713712163857,
                             "3": "PHT"
                         },
                         {
-                            "0": 25,
+                            "0": 81,
                             "1": "/",
-                            "2": 1713541587444,
+                            "2": 1713712162880,
                             "3": "PHT"
                         },
                         {
-                            "0": 26,
+                            "0": 80,
                             "1": "/",
-                            "2": 1713541590863,
+                            "2": 1713712018246,
                             "3": "PHT"
                         },
                         {
-                            "0": 27,
+                            "0": 79,
                             "1": "/",
-                            "2": 1713541594427,
+                            "2": 1713712017756,
                             "3": "PHT"
                         },
                         {
-                            "0": 28,
+                            "0": 78,
                             "1": "/",
-                            "2": 1713541628404,
+                            "2": 1713712016903,
                             "3": "PHT"
                         },
                         {
-                            "0": 29,
+                            "0": 76,
                             "1": "/",
-                            "2": 1713541634469,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 30,
-                            "1": "/",
-                            "2": 1713541635841,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 31,
-                            "1": "/",
-                            "2": 1713542011446,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 32,
-                            "1": "/",
-                            "2": 1713598234419,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 33,
-                            "1": "/",
-                            "2": 1713598239650,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 34,
-                            "1": "/",
-                            "2": 1713598243166,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 35,
-                            "1": "/",
-                            "2": 1713598245328,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 36,
-                            "1": "/",
-                            "2": 1713689907043,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 37,
-                            "1": "/",
-                            "2": 1713689942829,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 38,
-                            "1": "/",
-                            "2": 1713689946382,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 39,
-                            "1": "/",
-                            "2": 1713689947762,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 40,
-                            "1": "/",
-                            "2": 1713689961449,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 41,
-                            "1": "/",
-                            "2": 1713690653947,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 42,
-                            "1": "/",
-                            "2": 1713690719477,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 43,
-                            "1": "/",
-                            "2": 1713690722127,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 44,
-                            "1": "/",
-                            "2": 1713690728305,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 45,
-                            "1": "/",
-                            "2": 1713690746595,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 46,
-                            "1": "/",
-                            "2": 1713690747142,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 47,
-                            "1": "/",
-                            "2": 1713690749328,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 48,
-                            "1": "/",
-                            "2": 1713690794589,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 49,
-                            "1": "/",
-                            "2": 1713690798770,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 50,
-                            "1": "/",
-                            "2": 1713690804388,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 51,
-                            "1": "/",
-                            "2": 1713690806284,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 52,
-                            "1": "/",
-                            "2": 1713690807677,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 53,
-                            "1": "/",
-                            "2": 1713690850078,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 54,
-                            "1": "/",
-                            "2": 1713690851752,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 55,
-                            "1": "/",
-                            "2": 1713690910630,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 56,
-                            "1": "/",
-                            "2": 1713690913351,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 57,
-                            "1": "/",
-                            "2": 1713690913991,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 58,
-                            "1": "/",
-                            "2": 1713691195330,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 59,
-                            "1": "/",
-                            "2": 1713691196537,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 60,
-                            "1": "/",
-                            "2": 1713691220369,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 61,
-                            "1": "/",
-                            "2": 1713691233108,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 62,
-                            "1": "/",
-                            "2": 1713691808600,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 63,
-                            "1": "/",
-                            "2": 1713691855137,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 64,
-                            "1": "/",
-                            "2": 1713691880050,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 65,
-                            "1": "/",
-                            "2": 1713691880757,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 66,
-                            "1": "/",
-                            "2": 1713691895258,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 67,
-                            "1": "/",
-                            "2": 1713691901936,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 68,
-                            "1": "/",
-                            "2": 1713691904765,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 69,
-                            "1": "/",
-                            "2": 1713691923761,
-                            "3": "PHT"
-                        },
-                        {
-                            "0": 70,
-                            "1": "/",
-                            "2": 1713691978590,
+                            "2": 1713692766195,
                             "3": "PHT"
                         },
                         {
@@ -1064,33 +818,129 @@
                             "3": "PHT"
                         },
                         {
-                            "0": 72,
+                            "0": 70,
                             "1": "/",
-                            "2": 1713692044782,
+                            "2": 1713691978590,
                             "3": "PHT"
                         },
                         {
-                            "0": 73,
+                            "0": 69,
                             "1": "/",
-                            "2": 1713692049622,
+                            "2": 1713691923761,
                             "3": "PHT"
                         },
                         {
-                            "0": 74,
+                            "0": 66,
                             "1": "/",
-                            "2": 1713692091576,
+                            "2": 1713691895258,
                             "3": "PHT"
                         },
                         {
-                            "0": 75,
+                            "0": 63,
                             "1": "/",
-                            "2": 1713692726101,
+                            "2": 1713691855137,
                             "3": "PHT"
                         },
                         {
-                            "0": 76,
+                            "0": 60,
                             "1": "/",
-                            "2": 1713692766195,
+                            "2": 1713691220369,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 59,
+                            "1": "/",
+                            "2": 1713691196537,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 49,
+                            "1": "/",
+                            "2": 1713690798770,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 46,
+                            "1": "/",
+                            "2": 1713690747142,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 42,
+                            "1": "/",
+                            "2": 1713690719477,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 38,
+                            "1": "/",
+                            "2": 1713689946382,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 32,
+                            "1": "/",
+                            "2": 1713598234419,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 31,
+                            "1": "/",
+                            "2": 1713542011446,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 30,
+                            "1": "/",
+                            "2": 1713541635841,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 27,
+                            "1": "/",
+                            "2": 1713541594427,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 24,
+                            "1": "/",
+                            "2": 1713532525090,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 22,
+                            "1": "/",
+                            "2": 1713532515886,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 18,
+                            "1": "/",
+                            "2": 1713527083796,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 16,
+                            "1": "/",
+                            "2": 1713446630757,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 15,
+                            "1": "/",
+                            "2": 1713446552781,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 13,
+                            "1": "/",
+                            "2": 1713439389757,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 12,
+                            "1": "/",
+                            "2": 1713439389339,
                             "3": "PHT"
                         }
                     ],
@@ -1125,33 +975,33 @@
                         }
                     ],
                     "executionInfo": {
-                        "text": "OK, 66 records retrieved in 1.97ms"
+                        "text": "OK, 41 records retrieved in 3.69ms"
                     },
-                    "totalRowCount": 66,
+                    "totalRowCount": 41,
                     "hasMoreRows": false,
                     "currentPage": 0,
                     "index": 1,
-                    "sql": " SELECT id, route, utime, timezone FROM inputs"
+                    "sql": " SELECT inputs.id, inputs.route, inputs.utime, inputs.timezone FROM inputs JOIN mouse_inputs ON mouse_inputs.input_id = inputs.id GROUP BY mouse_inputs.input_id HAVING COUNT(mouse_inputs.id) >= 0 ORDER BY inputs.utime DESC"
                 },
                 {
-                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "e765ef80-f56f-43f8-e46d-7a6b1e4c4130",
+                    "tabId": "a543bd4a-9997-42f3-906c-40243a09f8a2",
+                    "resultId": "0391e293-4489-464d-ba60-2d52b7b859a2",
                     "rows": [
                         {
                             "0": "F5",
-                            "1": 19
+                            "1": 26
                         },
                         {
                             "0": "Meta",
-                            "1": 17
+                            "1": 23
                         },
                         {
                             "0": "Control",
-                            "1": 20
+                            "1": 56
                         },
                         {
                             "0": "Shift",
-                            "1": 7
+                            "1": 32
                         },
                         {
                             "0": "s",
@@ -1168,6 +1018,10 @@
                         {
                             "0": "Alt",
                             "1": 6
+                        },
+                        {
+                            "0": "T",
+                            "1": 2
                         }
                     ],
                     "columns": [
@@ -1187,17 +1041,17 @@
                         }
                     ],
                     "executionInfo": {
-                        "text": "OK, 8 records retrieved in 1.299ms"
+                        "text": "OK, 9 records retrieved in 0.866ms"
                     },
-                    "totalRowCount": 8,
+                    "totalRowCount": 9,
                     "hasMoreRows": false,
                     "currentPage": 0,
                     "index": 2,
                     "sql": " SELECT button, COUNT(id) AS presses FROM keyboard_inputs GROUP BY button"
                 },
                 {
-                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "63a272cc-4c64-4818-8ce2-4e554a2ae5d1",
+                    "tabId": "a543bd4a-9997-42f3-906c-40243a09f8a2",
+                    "resultId": "50b0f8ef-61f5-4553-90f0-aeeaffcd7c74",
                     "rows": [
                         {
                             "0": 63,
@@ -1210,13 +1064,68 @@
                             "2": 7
                         },
                         {
-                            "0": 38,
-                            "1": 7,
+                            "0": 50,
+                            "1": 675,
                             "2": 6
                         },
                         {
-                            "0": 49,
-                            "1": 24,
+                            "0": 268,
+                            "1": 658,
+                            "2": 6
+                        },
+                        {
+                            "0": 73,
+                            "1": 685,
+                            "2": 6
+                        },
+                        {
+                            "0": 57,
+                            "1": 678,
+                            "2": 6
+                        },
+                        {
+                            "0": 110,
+                            "1": 678,
+                            "2": 6
+                        },
+                        {
+                            "0": 264,
+                            "1": 649,
+                            "2": 6
+                        },
+                        {
+                            "0": 104,
+                            "1": 681,
+                            "2": 6
+                        },
+                        {
+                            "0": 79,
+                            "1": 686,
+                            "2": 6
+                        },
+                        {
+                            "0": 86,
+                            "1": 687,
+                            "2": 6
+                        },
+                        {
+                            "0": 11,
+                            "1": 647,
+                            "2": 6
+                        },
+                        {
+                            "0": 289,
+                            "1": 688,
+                            "2": 6
+                        },
+                        {
+                            "0": 117,
+                            "1": 674,
+                            "2": 6
+                        },
+                        {
+                            "0": 284,
+                            "1": 681,
                             "2": 6
                         },
                         {
@@ -1225,73 +1134,83 @@
                             "2": 6
                         },
                         {
-                            "0": 267,
-                            "1": 140,
-                            "2": 5
+                            "0": 23,
+                            "1": 657,
+                            "2": 6
                         },
                         {
-                            "0": 277,
-                            "1": 219,
-                            "2": 5
+                            "0": 123,
+                            "1": 671,
+                            "2": 6
                         },
                         {
-                            "0": 179,
-                            "1": 191,
-                            "2": 5
-                        },
-                        {
-                            "0": 607,
-                            "1": 296,
-                            "2": 5
-                        },
-                        {
-                            "0": 633,
-                            "1": 151,
-                            "2": 5
+                            "0": 98,
+                            "1": 682,
+                            "2": 6
                         },
                         {
                             "0": 33,
-                            "1": 20,
-                            "2": 5
+                            "1": 664,
+                            "2": 6
                         },
                         {
-                            "0": 52,
-                            "1": 90,
-                            "2": 5
+                            "0": 38,
+                            "1": 7,
+                            "2": 6
                         },
                         {
-                            "0": 378,
-                            "1": 52,
-                            "2": 5
+                            "0": 280,
+                            "1": 674,
+                            "2": 6
                         },
                         {
-                            "0": 108,
-                            "1": 103,
-                            "2": 5
+                            "0": 1,
+                            "1": 635,
+                            "2": 6
                         },
                         {
-                            "0": 61,
-                            "1": 81,
-                            "2": 5
+                            "0": 273,
+                            "1": 665,
+                            "2": 6
                         },
                         {
-                            "0": 337,
-                            "1": 113,
-                            "2": 5
+                            "0": 269,
+                            "1": 639,
+                            "2": 6
                         },
                         {
-                            "0": 58,
-                            "1": 228,
-                            "2": 5
+                            "0": 49,
+                            "1": 24,
+                            "2": 6
                         },
                         {
-                            "0": 94,
-                            "1": 255,
-                            "2": 5
+                            "0": 263,
+                            "1": 643,
+                            "2": 6
                         },
                         {
-                            "0": 35,
-                            "1": 207,
+                            "0": 41,
+                            "1": 670,
+                            "2": 6
+                        },
+                        {
+                            "0": 89,
+                            "1": 28,
+                            "2": 6
+                        },
+                        {
+                            "0": 92,
+                            "1": 685,
+                            "2": 6
+                        },
+                        {
+                            "0": 64,
+                            "1": 681,
+                            "2": 6
+                        },
+                        {
+                            "0": 455,
+                            "1": 107,
                             "2": 5
                         },
                         {
@@ -1300,298 +1219,13 @@
                             "2": 5
                         },
                         {
-                            "0": 363,
-                            "1": 208,
-                            "2": 5
-                        },
-                        {
-                            "0": 99,
-                            "1": 91,
-                            "2": 5
-                        },
-                        {
-                            "0": 440,
-                            "1": 20,
-                            "2": 5
-                        },
-                        {
-                            "0": 455,
-                            "1": 107,
-                            "2": 5
-                        },
-                        {
-                            "0": 94,
-                            "1": 83,
-                            "2": 5
-                        },
-                        {
-                            "0": 887,
-                            "1": 417,
-                            "2": 5
-                        },
-                        {
-                            "0": 225,
-                            "1": 111,
-                            "2": 5
-                        },
-                        {
-                            "0": 437,
-                            "1": 129,
-                            "2": 5
-                        },
-                        {
-                            "0": 19,
-                            "1": 211,
-                            "2": 5
-                        },
-                        {
-                            "0": 249,
-                            "1": 106,
-                            "2": 5
-                        },
-                        {
-                            "0": 31,
-                            "1": 214,
-                            "2": 5
-                        },
-                        {
-                            "0": 50,
-                            "1": 224,
-                            "2": 5
-                        },
-                        {
-                            "0": 304,
-                            "1": 89,
-                            "2": 5
-                        },
-                        {
-                            "0": 571,
-                            "1": 155,
-                            "2": 5
-                        },
-                        {
-                            "0": 8,
-                            "1": 196,
-                            "2": 5
-                        },
-                        {
-                            "0": 281,
-                            "1": 232,
-                            "2": 5
-                        },
-                        {
-                            "0": 271,
-                            "1": 190,
-                            "2": 5
-                        },
-                        {
-                            "0": 161,
-                            "1": 179,
-                            "2": 5
-                        },
-                        {
-                            "0": 596,
-                            "1": 291,
-                            "2": 5
-                        },
-                        {
-                            "0": 507,
-                            "1": 254,
-                            "2": 5
-                        },
-                        {
-                            "0": 198,
-                            "1": 190,
-                            "2": 5
-                        },
-                        {
-                            "0": 150,
-                            "1": 169,
-                            "2": 5
-                        },
-                        {
-                            "0": 435,
-                            "1": 110,
-                            "2": 5
-                        },
-                        {
-                            "0": 335,
-                            "1": 80,
-                            "2": 5
-                        },
-                        {
-                            "0": 400,
-                            "1": 36,
-                            "2": 5
-                        },
-                        {
-                            "0": 417,
-                            "1": 30,
-                            "2": 5
-                        },
-                        {
-                            "0": 65,
-                            "1": 20,
-                            "2": 5
-                        },
-                        {
-                            "0": 51,
-                            "1": 36,
-                            "2": 5
-                        },
-                        {
-                            "0": 41,
-                            "1": 30,
-                            "2": 5
-                        },
-                        {
-                            "0": 85,
-                            "1": 21,
-                            "2": 5
-                        },
-                        {
-                            "0": 91,
-                            "1": 11,
-                            "2": 5
-                        },
-                        {
                             "0": 33,
                             "1": 137,
                             "2": 5
                         },
                         {
-                            "0": 29,
-                            "1": 27,
-                            "2": 5
-                        },
-                        {
-                            "0": 157,
-                            "1": 5,
-                            "2": 5
-                        },
-                        {
-                            "0": 103,
-                            "1": 77,
-                            "2": 5
-                        },
-                        {
-                            "0": 83,
-                            "1": 245,
-                            "2": 5
-                        },
-                        {
-                            "0": 106,
-                            "1": 269,
-                            "2": 5
-                        },
-                        {
-                            "0": 36,
-                            "1": 13,
-                            "2": 5
-                        },
-                        {
-                            "0": 64,
-                            "1": 231,
-                            "2": 5
-                        },
-                        {
-                            "0": 21,
-                            "1": 208,
-                            "2": 5
-                        },
-                        {
-                            "0": 37,
-                            "1": 218,
-                            "2": 5
-                        },
-                        {
-                            "0": 74,
-                            "1": 238,
-                            "2": 5
-                        },
-                        {
-                            "0": 277,
-                            "1": 99,
-                            "2": 5
-                        },
-                        {
-                            "0": 56,
-                            "1": 10,
-                            "2": 5
-                        },
-                        {
-                            "0": 613,
-                            "1": 303,
-                            "2": 5
-                        },
-                        {
-                            "0": 903,
-                            "1": 371,
-                            "2": 5
-                        },
-                        {
-                            "0": 899,
-                            "1": 386,
-                            "2": 5
-                        },
-                        {
-                            "0": 573,
-                            "1": 276,
-                            "2": 5
-                        },
-                        {
-                            "0": 22,
-                            "1": 117,
-                            "2": 5
-                        },
-                        {
-                            "0": 216,
-                            "1": 184,
-                            "2": 5
-                        },
-                        {
-                            "0": 235,
-                            "1": 184,
-                            "2": 5
-                        },
-                        {
-                            "0": 23,
-                            "1": 31,
-                            "2": 5
-                        },
-                        {
-                            "0": 225,
-                            "1": 184,
-                            "2": 5
-                        },
-                        {
-                            "0": 155,
-                            "1": 175,
-                            "2": 5
-                        },
-                        {
-                            "0": 893,
-                            "1": 407,
-                            "2": 5
-                        },
-                        {
-                            "0": 207,
-                            "1": 186,
-                            "2": 5
-                        },
-                        {
-                            "0": 876,
-                            "1": 441,
-                            "2": 5
-                        },
-                        {
-                            "0": 12,
-                            "1": 129,
-                            "2": 5
-                        },
-                        {
-                            "0": 75,
-                            "1": 34,
+                            "0": 177,
+                            "1": 91,
                             "2": 5
                         },
                         {
@@ -1600,17 +1234,37 @@
                             "2": 5
                         },
                         {
-                            "0": 69,
-                            "1": 26,
+                            "0": 198,
+                            "1": 190,
                             "2": 5
                         },
                         {
-                            "0": 48,
-                            "1": 3,
+                            "0": 35,
+                            "1": 207,
                             "2": 5
                         },
                         {
-                            "0": 41,
+                            "0": 23,
+                            "1": 31,
+                            "2": 5
+                        },
+                        {
+                            "0": 571,
+                            "1": 155,
+                            "2": 5
+                        },
+                        {
+                            "0": 220,
+                            "1": 144,
+                            "2": 5
+                        },
+                        {
+                            "0": 179,
+                            "1": 191,
+                            "2": 5
+                        },
+                        {
+                            "0": 400,
                             "1": 36,
                             "2": 5
                         },
@@ -1620,58 +1274,8 @@
                             "2": 5
                         },
                         {
-                            "0": 140,
-                            "1": 151,
-                            "2": 5
-                        },
-                        {
-                            "0": 402,
-                            "1": 3,
-                            "2": 5
-                        },
-                        {
-                            "0": 432,
-                            "1": 23,
-                            "2": 5
-                        },
-                        {
-                            "0": 376,
-                            "1": 15,
-                            "2": 5
-                        },
-                        {
-                            "0": 220,
-                            "1": 144,
-                            "2": 5
-                        },
-                        {
-                            "0": 357,
-                            "1": 65,
-                            "2": 5
-                        },
-                        {
-                            "0": 308,
-                            "1": 143,
-                            "2": 5
-                        },
-                        {
-                            "0": 426,
-                            "1": 27,
-                            "2": 5
-                        },
-                        {
                             "0": 169,
                             "1": 186,
-                            "2": 5
-                        },
-                        {
-                            "0": 18,
-                            "1": 16,
-                            "2": 5
-                        },
-                        {
-                            "0": 177,
-                            "1": 91,
                             "2": 5
                         },
                         {
@@ -1680,13 +1284,8 @@
                             "2": 5
                         },
                         {
-                            "0": 58,
-                            "1": 3,
-                            "2": 5
-                        },
-                        {
-                            "0": 245,
-                            "1": 136,
+                            "0": 36,
+                            "1": 13,
                             "2": 5
                         },
                         {
@@ -1695,8 +1294,263 @@
                             "2": 5
                         },
                         {
-                            "0": 283,
-                            "1": 209,
+                            "0": 337,
+                            "1": 113,
+                            "2": 5
+                        },
+                        {
+                            "0": 94,
+                            "1": 255,
+                            "2": 5
+                        },
+                        {
+                            "0": 225,
+                            "1": 111,
+                            "2": 5
+                        },
+                        {
+                            "0": 633,
+                            "1": 151,
+                            "2": 5
+                        },
+                        {
+                            "0": 18,
+                            "1": 16,
+                            "2": 5
+                        },
+                        {
+                            "0": 893,
+                            "1": 407,
+                            "2": 5
+                        },
+                        {
+                            "0": 271,
+                            "1": 190,
+                            "2": 5
+                        },
+                        {
+                            "0": 899,
+                            "1": 386,
+                            "2": 5
+                        },
+                        {
+                            "0": 94,
+                            "1": 83,
+                            "2": 5
+                        },
+                        {
+                            "0": 507,
+                            "1": 254,
+                            "2": 5
+                        },
+                        {
+                            "0": 225,
+                            "1": 184,
+                            "2": 5
+                        },
+                        {
+                            "0": 304,
+                            "1": 89,
+                            "2": 5
+                        },
+                        {
+                            "0": 378,
+                            "1": 52,
+                            "2": 5
+                        },
+                        {
+                            "0": 75,
+                            "1": 34,
+                            "2": 5
+                        },
+                        {
+                            "0": 150,
+                            "1": 169,
+                            "2": 5
+                        },
+                        {
+                            "0": 80,
+                            "1": 76,
+                            "2": 5
+                        },
+                        {
+                            "0": 340,
+                            "1": 23,
+                            "2": 5
+                        },
+                        {
+                            "0": 103,
+                            "1": 77,
+                            "2": 5
+                        },
+                        {
+                            "0": 41,
+                            "1": 30,
+                            "2": 5
+                        },
+                        {
+                            "0": 33,
+                            "1": 20,
+                            "2": 5
+                        },
+                        {
+                            "0": 58,
+                            "1": 3,
+                            "2": 5
+                        },
+                        {
+                            "0": 157,
+                            "1": 5,
+                            "2": 5
+                        },
+                        {
+                            "0": 91,
+                            "1": 11,
+                            "2": 5
+                        },
+                        {
+                            "0": 106,
+                            "1": 269,
+                            "2": 5
+                        },
+                        {
+                            "0": 437,
+                            "1": 129,
+                            "2": 5
+                        },
+                        {
+                            "0": 85,
+                            "1": 21,
+                            "2": 5
+                        },
+                        {
+                            "0": 335,
+                            "1": 80,
+                            "2": 5
+                        },
+                        {
+                            "0": 596,
+                            "1": 291,
+                            "2": 5
+                        },
+                        {
+                            "0": 235,
+                            "1": 184,
+                            "2": 5
+                        },
+                        {
+                            "0": 29,
+                            "1": 27,
+                            "2": 5
+                        },
+                        {
+                            "0": 573,
+                            "1": 276,
+                            "2": 5
+                        },
+                        {
+                            "0": 161,
+                            "1": 179,
+                            "2": 5
+                        },
+                        {
+                            "0": 207,
+                            "1": 186,
+                            "2": 5
+                        },
+                        {
+                            "0": 155,
+                            "1": 175,
+                            "2": 5
+                        },
+                        {
+                            "0": 108,
+                            "1": 103,
+                            "2": 5
+                        },
+                        {
+                            "0": 99,
+                            "1": 91,
+                            "2": 5
+                        },
+                        {
+                            "0": 140,
+                            "1": 151,
+                            "2": 5
+                        },
+                        {
+                            "0": 216,
+                            "1": 184,
+                            "2": 5
+                        },
+                        {
+                            "0": 41,
+                            "1": 36,
+                            "2": 5
+                        },
+                        {
+                            "0": 65,
+                            "1": 20,
+                            "2": 5
+                        },
+                        {
+                            "0": 417,
+                            "1": 30,
+                            "2": 5
+                        },
+                        {
+                            "0": 402,
+                            "1": 3,
+                            "2": 5
+                        },
+                        {
+                            "0": 357,
+                            "1": 65,
+                            "2": 5
+                        },
+                        {
+                            "0": 432,
+                            "1": 23,
+                            "2": 5
+                        },
+                        {
+                            "0": 69,
+                            "1": 26,
+                            "2": 5
+                        },
+                        {
+                            "0": 363,
+                            "1": 208,
+                            "2": 5
+                        },
+                        {
+                            "0": 267,
+                            "1": 140,
+                            "2": 5
+                        },
+                        {
+                            "0": 440,
+                            "1": 20,
+                            "2": 5
+                        },
+                        {
+                            "0": 245,
+                            "1": 136,
+                            "2": 5
+                        },
+                        {
+                            "0": 308,
+                            "1": 143,
+                            "2": 5
+                        },
+                        {
+                            "0": 435,
+                            "1": 110,
+                            "2": 5
+                        },
+                        {
+                            "0": 376,
+                            "1": 15,
                             "2": 5
                         }
                     ],
@@ -1724,7 +1578,7 @@
                         }
                     ],
                     "executionInfo": {
-                        "text": "OK, 100 records retrieved in 4.654ms"
+                        "text": "OK, 100 records retrieved in 3.41ms"
                     },
                     "totalRowCount": 100,
                     "hasMoreRows": false,
@@ -1733,8 +1587,8 @@
                     "sql": " SELECT x_position, y_position, COUNT(id) AS frequency FROM mouse_inputs GROUP BY x_position, y_position ORDER BY frequency DESC LIMIT 100"
                 },
                 {
-                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "c1b62ff8-b52c-4678-90a0-33a24a0417fd",
+                    "tabId": "a543bd4a-9997-42f3-906c-40243a09f8a2",
+                    "resultId": "9554cc86-0da6-48f3-be5f-3f15e849dfde",
                     "rows": [
                         {
                             "0": 11
@@ -1933,6 +1787,114 @@
                         },
                         {
                             "0": 76
+                        },
+                        {
+                            "0": 77
+                        },
+                        {
+                            "0": 78
+                        },
+                        {
+                            "0": 79
+                        },
+                        {
+                            "0": 80
+                        },
+                        {
+                            "0": 81
+                        },
+                        {
+                            "0": 82
+                        },
+                        {
+                            "0": 83
+                        },
+                        {
+                            "0": 84
+                        },
+                        {
+                            "0": 85
+                        },
+                        {
+                            "0": 86
+                        },
+                        {
+                            "0": 87
+                        },
+                        {
+                            "0": 88
+                        },
+                        {
+                            "0": 89
+                        },
+                        {
+                            "0": 90
+                        },
+                        {
+                            "0": 91
+                        },
+                        {
+                            "0": 92
+                        },
+                        {
+                            "0": 93
+                        },
+                        {
+                            "0": 94
+                        },
+                        {
+                            "0": 95
+                        },
+                        {
+                            "0": 96
+                        },
+                        {
+                            "0": 97
+                        },
+                        {
+                            "0": 98
+                        },
+                        {
+                            "0": 99
+                        },
+                        {
+                            "0": 100
+                        },
+                        {
+                            "0": 136
+                        },
+                        {
+                            "0": 137
+                        },
+                        {
+                            "0": 138
+                        },
+                        {
+                            "0": 139
+                        },
+                        {
+                            "0": 140
+                        },
+                        {
+                            "0": 141
+                        },
+                        {
+                            "0": 142
+                        },
+                        {
+                            "0": 143
+                        },
+                        {
+                            "0": 144
+                        },
+                        {
+                            "0": 145
+                        },
+                        {
+                            "0": 146
+                        },
+                        {
+                            "0": 147
                         }
                     ],
                     "columns": [
@@ -1945,9 +1907,9 @@
                         }
                     ],
                     "executionInfo": {
-                        "text": "OK, 66 records retrieved in 0.796ms"
+                        "text": "OK, 102 records retrieved in 1.134ms"
                     },
-                    "totalRowCount": 66,
+                    "totalRowCount": 102,
                     "hasMoreRows": false,
                     "currentPage": 0,
                     "index": 4,
@@ -1963,7 +1925,7 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "73c4e65b-b667-4e7e-81a3-2ced0e2e06a6"
+                        "ca887273-d295-4f47-da5e-594905cec4c5"
                     ]
                 },
                 "currentHeight": 352,
@@ -1981,8 +1943,8 @@
             },
             "data": [
                 {
-                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "73c4e65b-b667-4e7e-81a3-2ced0e2e06a6",
+                    "tabId": "a543bd4a-9997-42f3-906c-40243a09f8a2",
+                    "resultId": "ca887273-d295-4f47-da5e-594905cec4c5",
                     "rows": [
                         {
                             "0": 22,
@@ -2527,7 +2489,7 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "1840d8c6-a747-4dda-9c1c-91a54ced1bec"
+                        "d487e5dc-7704-44de-e5d3-5c8cbb2a3815"
                     ]
                 },
                 "currentHeight": 36,
@@ -2545,8 +2507,8 @@
             },
             "data": [
                 {
-                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "1840d8c6-a747-4dda-9c1c-91a54ced1bec",
+                    "tabId": "a543bd4a-9997-42f3-906c-40243a09f8a2",
+                    "resultId": "d487e5dc-7704-44de-e5d3-5c8cbb2a3815",
                     "rows": [
                         {
                             "0": 934
@@ -2877,7 +2839,7 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "98fe13c5-8e0f-4818-9ab2-4aa258a11fb9"
+                        "e455ad8c-779c-45be-ec19-7fbda283c60e"
                     ]
                 },
                 "currentHeight": 36,
@@ -2895,8 +2857,8 @@
             },
             "data": [
                 {
-                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "98fe13c5-8e0f-4818-9ab2-4aa258a11fb9",
+                    "tabId": "a543bd4a-9997-42f3-906c-40243a09f8a2",
+                    "resultId": "e455ad8c-779c-45be-ec19-7fbda283c60e",
                     "rows": [
                         {
                             "0": 934
@@ -2930,7 +2892,7 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "b1b56ffb-4437-418c-9af2-53e755b9336a"
+                        "1bb84818-29eb-4912-9a3e-4213c60b9f93"
                     ]
                 },
                 "currentHeight": 36,
@@ -2957,8 +2919,8 @@
             },
             "data": [
                 {
-                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "b1b56ffb-4437-418c-9af2-53e755b9336a",
+                    "tabId": "a543bd4a-9997-42f3-906c-40243a09f8a2",
+                    "resultId": "1bb84818-29eb-4912-9a3e-4213c60b9f93",
                     "rows": [
                         {
                             "0": 1219,
@@ -3213,7 +3175,7 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "12afaa6f-e20e-4dbd-aebb-63f7c42ec345"
+                        "d83d000c-da7f-4700-e72b-497355803717"
                     ]
                 },
                 "currentHeight": 36,
@@ -3231,8 +3193,8 @@
             },
             "data": [
                 {
-                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "12afaa6f-e20e-4dbd-aebb-63f7c42ec345",
+                    "tabId": "a543bd4a-9997-42f3-906c-40243a09f8a2",
+                    "resultId": "d83d000c-da7f-4700-e72b-497355803717",
                     "rows": [
                         {
                             "0": 785
@@ -3266,7 +3228,7 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "9f6cfb05-94bd-4306-a13a-d76cfdc93b9a"
+                        "64f2bf46-85b8-4193-a96b-40285ab05b75"
                     ]
                 },
                 "currentHeight": 352,
@@ -3284,8 +3246,8 @@
             },
             "data": [
                 {
-                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "9f6cfb05-94bd-4306-a13a-d76cfdc93b9a",
+                    "tabId": "a543bd4a-9997-42f3-906c-40243a09f8a2",
+                    "resultId": "64f2bf46-85b8-4193-a96b-40285ab05b75",
                     "rows": [
                         {
                             "0": 11
@@ -3514,7 +3476,7 @@
                 "result": {
                     "type": "resultIds",
                     "list": [
-                        "1d1a8125-048a-48ae-bded-574ff334361e"
+                        "87936f40-4d19-4163-d2fe-853e082a3fc1"
                     ]
                 },
                 "currentHeight": 352,
@@ -3532,8 +3494,8 @@
             },
             "data": [
                 {
-                    "tabId": "e73ac727-b76b-4ec9-bd11-8ef55354b0b6",
-                    "resultId": "1d1a8125-048a-48ae-bded-574ff334361e",
+                    "tabId": "a543bd4a-9997-42f3-906c-40243a09f8a2",
+                    "resultId": "87936f40-4d19-4163-d2fe-853e082a3fc1",
                     "rows": [
                         {
                             "0": 11,
@@ -3918,7 +3880,318 @@
         {
             "state": {
                 "start": 65,
-                "end": 65,
+                "end": 70,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "8d672887-c7c8-4ddd-f212-3645de6e9ae2"
+                    ]
+                },
+                "currentHeight": 36,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 226
+                        },
+                        "contentStart": 0,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "a543bd4a-9997-42f3-906c-40243a09f8a2",
+                    "resultId": "8d672887-c7c8-4ddd-f212-3645de6e9ae2",
+                    "rows": [
+                        {
+                            "0": 141,
+                            "1": "/",
+                            "2": 1713727010832,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 140,
+                            "1": "/",
+                            "2": 1713726967578,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 139,
+                            "1": "/",
+                            "2": 1713719765502,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 138,
+                            "1": "/",
+                            "2": 1713719764646,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 137,
+                            "1": "/",
+                            "2": 1713715124706,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 136,
+                            "1": "/",
+                            "2": 1713715123401,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 97,
+                            "1": "/",
+                            "2": 1713712228077,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 96,
+                            "1": "/",
+                            "2": 1713712227109,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 95,
+                            "1": "/",
+                            "2": 1713712217913,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 94,
+                            "1": "/",
+                            "2": 1713712217440,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 93,
+                            "1": "/",
+                            "2": 1713712217172,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 92,
+                            "1": "/",
+                            "2": 1713712216069,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 82,
+                            "1": "/",
+                            "2": 1713712163857,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 81,
+                            "1": "/",
+                            "2": 1713712162880,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 80,
+                            "1": "/",
+                            "2": 1713712018246,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 79,
+                            "1": "/",
+                            "2": 1713712017756,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 78,
+                            "1": "/",
+                            "2": 1713712016903,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 76,
+                            "1": "/",
+                            "2": 1713692766195,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 71,
+                            "1": "/",
+                            "2": 1713691979228,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 70,
+                            "1": "/",
+                            "2": 1713691978590,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 69,
+                            "1": "/",
+                            "2": 1713691923761,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 66,
+                            "1": "/",
+                            "2": 1713691895258,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 63,
+                            "1": "/",
+                            "2": 1713691855137,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 60,
+                            "1": "/",
+                            "2": 1713691220369,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 59,
+                            "1": "/",
+                            "2": 1713691196537,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 49,
+                            "1": "/",
+                            "2": 1713690798770,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 46,
+                            "1": "/",
+                            "2": 1713690747142,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 42,
+                            "1": "/",
+                            "2": 1713690719477,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 38,
+                            "1": "/",
+                            "2": 1713689946382,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 32,
+                            "1": "/",
+                            "2": 1713598234419,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 31,
+                            "1": "/",
+                            "2": 1713542011446,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 30,
+                            "1": "/",
+                            "2": 1713541635841,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 27,
+                            "1": "/",
+                            "2": 1713541594427,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 24,
+                            "1": "/",
+                            "2": 1713532525090,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 22,
+                            "1": "/",
+                            "2": 1713532515886,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 18,
+                            "1": "/",
+                            "2": 1713527083796,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 16,
+                            "1": "/",
+                            "2": 1713446630757,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 15,
+                            "1": "/",
+                            "2": 1713446552781,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 13,
+                            "1": "/",
+                            "2": 1713439389757,
+                            "3": "PHT"
+                        },
+                        {
+                            "0": 12,
+                            "1": "/",
+                            "2": 1713439389339,
+                            "3": "PHT"
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "id",
+                            "field": "0",
+                            "dataType": {
+                                "type": 4
+                            }
+                        },
+                        {
+                            "title": "route",
+                            "field": "1",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "utime",
+                            "field": "2",
+                            "dataType": {
+                                "type": 5
+                            }
+                        },
+                        {
+                            "title": "timezone",
+                            "field": "3",
+                            "dataType": {
+                                "type": 17
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 40 records retrieved in 4.699ms"
+                    },
+                    "totalRowCount": 40,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "SELECT inputs.id, inputs.route, inputs.utime, inputs.timezone\nFROM inputs\nJOIN mouse_inputs ON mouse_inputs.input_id = inputs.id\nGROUP BY mouse_inputs.input_id\nHAVING COUNT(mouse_inputs.input_id) > 0\nORDER BY inputs.utime DESC"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 71,
+                "end": 71,
                 "language": "mysql",
                 "currentHeight": 180,
                 "statements": [
