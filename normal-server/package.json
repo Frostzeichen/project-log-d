@@ -3,9 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "nodemon server.js",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "nodemon server.js"
   },
   "dependencies": {
     "express": "^4.19.2"
